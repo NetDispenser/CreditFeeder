@@ -1,0 +1,73 @@
+<html>
+<head>
+<title>{{title}}</title>
+
+<link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
+<link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/creditfeeder/css/login.css">
+<script src="/static/creditfeeder/js/jquery.min.js"></script>
+
+<script>
+var decode=function(str){
+	var div = document.createElement('div');
+	div.innerHTML = str;
+	var decoded=str;
+	try{
+		decoded = div.firstChild.nodeValue;
+	}
+	catch(e){;}
+	return decoded;
+}
+$(document).ready(function(){
+	$("#device_div").html("<b>Device IP: </b>{{device_ip}}");
+	var child_pyld={"account_type":"child","device_ip":"{{device_ip}}"};
+	$("#child_pyld").val(JSON.stringify(child_pyld));//prepares for submit
+	var parent_pyld={"account_type":"parent","device_ip":"{{device_ip}}"};
+	$("#parent_pyld").val(JSON.stringify(parent_pyld));//prepares for submit
+});
+</script>
+</head>
+
+<body>
+<div id="modal" class="modal" style="display:block;">
+	<div class="modal-content">
+		<div class="imgcontainer">
+			<span onclick="document.getElementById('modal').style.display='none'" class="close" title="Close Modal">&times;</span>
+			<i><h2>{{title}}</h2></i>
+		</div>
+
+		<div class="container">
+			<table align="center">
+			<tr><td colspan="2">
+			<div id="device_div"></div>
+			</td></tr>
+			<tr><td>
+				<form class="animate" action="/" method="POST" style="max-width:400px;">
+					{% csrf_token %}
+					<button type="submit">Child</button>
+					<input type="hidden" id="child_pyld" name="login_pyld" value=""></input>
+				</form>
+			</td><td>
+				<form class="animate" action="/" method="POST" style="max-width:400px;">
+					{% csrf_token %}
+					<button type="submit">Parent</button>
+					<input type="hidden" id="parent_pyld" name="login_pyld" value=""></input>
+				</form>
+			</td></tr>
+			</table>
+		</div>
+	</div>
+</div>
+
+<script>
+
+var modal = document.getElementById('modal');
+
+window.onclick = function(event) {
+		if (event.target == modal) {
+			modal.style.display = "none";
+		}
+}
+</script>
+</body>
+</html>
