@@ -53,6 +53,8 @@ def home(request):
 			acct=User.objects.create_user(username=uname,password='pycon2017')
 			acct.userprofile.is_parent=False
 			if pyld["account_type"]=="parent":acct.userprofile.is_parent=True
+			default_student=pyld['device_ip']+"_STUDENT"
+			acct.userprofile.students.append(default_student)
 			acct.userprofile.save()
 			acct.save()
 
@@ -95,20 +97,27 @@ def get(request):
 
 
 @login_required
-def student_app(request,username,pyld):
+def student_app(request,uname,pyld):
+	acct=User.objects.get(username=uname)
 	context={
 		'title':'Student@CreditFeeder',
-		'username':username,
-		'credit_balance':request.user.userprofile.credit_balance,
+		'username':uname,
+		'credit_balance':acct.userprofile.credit_balance,
 		'json_pyld':json.dumps(pyld),
+		'json_assignments':json.dumps(acct.userprofile.assignments),
 	}
 	return render(request,'student_app.html',context)
 
 @login_required
-def parent_app(request,username,pyld):
+def parent_app(request,uname,pyld):
+	acct=User.objects.get(username=uname)
+	activities=["ColorMyWorld","NowReadThis","TuxMathScrabble"]
 	context={
 		'title':'Parent@CreditFeeder',
-		'username':username,
+		'username':uname,
 		'json_pyld':json.dumps(pyld),
+		'json_students':json.dumps(acct.userprofile.students),
+		'json_assignments':json.dumps(acct.userprofile.assignments),
+		'json_activities':json.dumps(activities),
 	}
 	return render(request,'parent_app.html',context)

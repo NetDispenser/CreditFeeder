@@ -4,13 +4,107 @@ fieldset{width:0%;padding:100px 100px;}
 </style>
 <head>
 <title>{{title}}</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
+<link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
+<script src="/static/creditfeeder/js/jquery.min.js"></script>
+<script src="/static/creditfeeder/js/utils.js"></script>
+<script>
+var logout=function(){window.location="/logout"}
+var print=function(msg){console.log(msg)}
+$(document).ready(function(){
+
+	print("ready");
+
+	var students=JSON.parse(decode("{{json_students}}"));
+	var assignments=JSON.parse(decode("{{json_assignments}}"));
+	var activities=JSON.parse(decode("{{json_activities}}"));
+
+	print(students.length)
+	print(assignments.length)
+	print(activities.length)
+
+	for(var aidx=0;aidx<activities.length;aidx++){
+		var opt=document.createElement("option")
+		opt.id=activities[aidx]
+		opt.value=activities[aidx]
+		opt.text=activities[aidx]
+		$("#activity_select").append(opt)
+	}
+
+	for(var aidx=0;aidx<assignments.length;aidx++){
+		print(assignments[aidx])
+		//new table row goes here ... sub-out to function
+	}
+
+	for(var sidx=0;sidx<students.length;sidx++){
+		print(students[sidx])
+		var opt=document.createElement("option")
+		opt.id=students[sidx]
+		opt.value=students[sidx]
+		opt.text=students[sidx]
+		$("#student_select").append(opt)
+	}
+	load_studentCB();
+
+});//ready
+var createCB=function(){
+	var activity_name=get_selected("activity_select",0);
+	print("create assignment: "+activity_name);
+	//ajax pyld to server; server creates ala RunningLog
+	//views adds to UserProfile
+	//
+}
+var load_studentCB=function(){
+	var student_name=get_selected("student_select",0)
+	print("load_studentCB: "+student_name);
+}
+</script>
 </head>
 <body>
+<div>{{username}}</div>
 <fieldset>
-<legend>Parent CreditFeeder App</legend>
-username={{username}}<br>
-json_pyld={{json_pyld}}
+	<legend>All Assignments</legend>
+	<table id="create_table">
+	<tr>
+	<td>
+		<select id="activity_select">
+		</select>
+		<button id="createtB" onclick="createCB()"><i style="font-size:24px" class="fa">&#xf196;</i></button>
+	</td>
+	</tr>
+	</table>
+
+	<table id="assignment_table">
+	<tr>
+	<th>Name</th>
+	<th>Activity</th>
+	<th>Edit</th>
+	<th>Test</th>
+	<th>Assign</th>
+	<th>Select</th>
+	<th>Delete</th>
+	</tr>
+	</table>
 </fieldset>
-<a href="/logout">Logout {{username}}</a>
+
+
+<fieldset>
+	<legend>Student Assignments</legend>
+	<select id="student_select" onchange="load_studentCB()"></select>
+
+	<table id="student_assignments">
+		<tr>
+		<th>Name</th>
+		<th>Activity</th>
+		<th>Complete</th>
+		</tr>
+	</table>
+</fieldset>
+
+<button onclick="logout()">Logout</button>
+
 </body>
 </html>
