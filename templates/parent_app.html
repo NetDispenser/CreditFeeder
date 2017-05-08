@@ -79,6 +79,17 @@ $(document).ready(function(){
 		e.preventDefault();
 	});
 
+	$("#delete_form").submit(function(e){
+		print("submitting delete_form ...")
+		$.ajax({
+			type: "POST",
+			url: "/delete",
+			data: $("#delete_form").serialize(),
+			success: function(rval){console.log(rval)}
+		});
+		e.preventDefault();
+	});
+
 	$("#load_student_form").submit(function(e){
 		print("submitting load_student_form ...")
 		$.ajax({
@@ -143,6 +154,24 @@ var removeCB=function(e){
 	$('#remove_pyld').val(JSON.stringify(pval));
 	$("#remove_form").submit();
 }
+var deleteCB=function(e){
+	print("deleteCB: "+e.target.id);
+	var a_id=e.target.id.split("_")[1];
+	var row_id="assignment_table_row_"+a_id;
+	var t=document.getElementById("assignment_table");
+	var rows=t.rows;
+	var target_idx=null;
+	for(var ridx=0;ridx<rows.length;ridx++){
+		var r=rows[ridx];
+		if(r.id==row_id)target_idx=ridx;
+	}
+	t.deleteRow(target_idx);//backwards -- should wait for Ajax success before removing, but have info here
+	pval={};
+	pval['assignment_id']=a_id;
+	$('#delete_pyld').val(JSON.stringify(pval));
+	$("#delete_form").submit();
+	removeCB(e);//same usable _id at end of e.target.id 
+}
 </script>
 </head>
 <body>
@@ -203,6 +232,10 @@ var removeCB=function(e){
 <form id="load_student_form" method="POST">
 	{% csrf_token %}
 	<input id="load_student_pyld" type="hidden" name="load_student_pyld"></input>
+</form>
+<form id="delete_form" method="POST">
+	{% csrf_token %}
+	<input id="delete_pyld" type="hidden" name="delete_pyld"></input>
 </form>
 
 </body>

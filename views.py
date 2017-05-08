@@ -162,12 +162,32 @@ def remove(request):
 	str_pyld=request.POST["remove_pyld"]
 	json_pyld=json.loads(str_pyld)
 	assignment_id=json_pyld['assignment_id']
-	a=Assignment.objects.get(id=assignment_id)
 	student_username=json_pyld['student_username']
 	acct=User.objects.get(username=student_username)
-	acct.userprofile.assignments.remove(assignment_id)
-	acct.userprofile.save()
+	try:
+		acct.userprofile.assignments.remove(int(assignment_id))
+		acct.userprofile.save()
+	except:
+		mylogger.debug("failed to remove a_id="+assignment_id+" from "+acct.username);
+
 	return HttpResponse("Assignmet Removed")
+
+@login_required
+def delete(request):
+	str_pyld=request.POST["delete_pyld"]
+	json_pyld=json.loads(str_pyld)
+	assignment_id=json_pyld['assignment_id']
+	a=Assignment.objects.get(id=assignment_id)
+	a.delete()
+
+	#remove from parent's account here but use removeCB to remove from students
+	#problem: removeCB only removes from loaded student
+	print(request.user.userprofile.assignments)
+	print(assignment_id)
+	request.user.userprofile.assignments.remove(int(assignment_id))
+	request.user.userprofile.save()
+
+	return HttpResponse("Assignmet Deleted")
 
 @login_required
 def load_student(request):

@@ -59,16 +59,27 @@ var mkRemoveB=function(a_id){
 	b.addEventListener("click",removeCB,false)
 	return b;
 }
+var mkDeleteB=function(a_id){
+	var b=document.createElement("button");
+	b.id="delete_"+a_id;
+	b.innerHTML="Delete";
+	b.addEventListener("click",deleteCB,false)
+	return b;
+}
 var add_assignment=function(a){
 	var t=document.getElementById("assignment_table");
 	var r=t.insertRow(-1);
+	r.id="assignment_table_row_"+a.id;
+
 	var c=r.insertCell(-1);
 	c.appendChild(mkHtmlDiv(a['title']))
+
 	var c=r.insertCell(-1);
 	c.appendChild(mkHtmlDiv(a['activity_name']))
 
 	var c=r.insertCell(-1);
 	c.appendChild(mkHtmlDiv('EDIT'))
+
 	var c=r.insertCell(-1);
 	c.appendChild(mkHtmlDiv('TEST'))
 
@@ -80,7 +91,8 @@ var add_assignment=function(a){
 	c.appendChild(mkStudentSelect(a.id,opts))
 
 	var c=r.insertCell(-1);
-	c.appendChild(mkHtmlDiv('DELETE'))
+	c.appendChild(mkDeleteB(a.id))
+
 }
 var add_assignment_to_student=function(a){//the student_username is included in a (assignment summary)
 	console.log("add_assignment_to_student")
@@ -90,6 +102,7 @@ var add_assignment_to_student=function(a){//the student_username is included in 
 		var t=document.getElementById("student_assignments");
 		var r=t.insertRow(-1);
 		r.id="student_assignment_row_"+a.id;
+
 		var c=r.insertCell(-1);
 		c.appendChild(mkHtmlDiv(a['title']))
 
