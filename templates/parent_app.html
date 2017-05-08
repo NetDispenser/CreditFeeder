@@ -12,19 +12,26 @@ fieldset{width:0%;padding:100px 100px;}
 <script src="/static/creditfeeder/js/jquery.min.js"></script>
 <script src="/static/creditfeeder/js/utils.js"></script>
 <script>
-var logout=function(){window.location="/logout"}
-var print=function(msg){console.log(msg)}
 $(document).ready(function(){
 
 	print("ready");
 
-	var students=JSON.parse(decode("{{json_students}}"));
-	var assignments=JSON.parse(decode("{{json_assignments}}"));
-	var activities=JSON.parse(decode("{{json_activities}}"));
+	var students=JSON.parse(decode("{{str_students}}"));
+	var assignments=JSON.parse(decode("{{str_assignments}}"));
+	var activities=JSON.parse(decode("{{str_activities}}"));
 
 	print(students.length)
 	print(assignments.length)
 	print(activities.length)
+
+	for(var sidx=0;sidx<students.length;sidx++){
+		print(students[sidx])
+		var opt=document.createElement("option")
+		opt.id=students[sidx]
+		opt.value=students[sidx]
+		opt.text=students[sidx]
+		$("#student_select").append(opt)
+	}
 
 	for(var aidx=0;aidx<activities.length;aidx++){
 		var opt=document.createElement("option")
@@ -36,68 +43,143 @@ $(document).ready(function(){
 
 	for(var aidx=0;aidx<assignments.length;aidx++){
 		print(assignments[aidx])
-		//new table row goes here ... sub-out to function
+		add_assignment(assignments[aidx])
 	}
 
-	for(var sidx=0;sidx<students.length;sidx++){
-		print(students[sidx])
-		var opt=document.createElement("option")
-		opt.id=students[sidx]
-		opt.value=students[sidx]
-		opt.text=students[sidx]
-		$("#student_select").append(opt)
-	}
+	$("#create_form").submit(function(e){
+		print("submitting create_form ...")
+		$.ajax({
+			type: "POST",
+			url: "/create",
+			data: $("#create_form").serialize(),
+			success: function(rval){add_assignment(JSON.parse(decode(rval)))}//change "saveB" color
+		});
+		e.preventDefault();
+	});
+
+	$("#assign_form").submit(function(e){
+		print("submitting assign_form ...")
+		$.ajax({
+			type: "POST",
+			url: "/assign",
+			data: $("#assign_form").serialize(),
+			success: function(rval){add_assignment_to_student(JSON.parse(decode(rval)))}//change "saveB" color
+		});
+		e.preventDefault();
+	});
+
+	$("#remove_form").submit(function(e){
+		print("submitting remove_form ...")
+		$.ajax({
+			type: "POST",
+			url: "/remove",
+			data: $("#remove_form").serialize(),
+			success: function(rval){console.log(rval)}
+		});
+		e.preventDefault();
+	});
+
+	$("#load_student_form").submit(function(e){
+		print("submitting load_student_form ...")
+		$.ajax({
+			type: "POST",
+			url: "/load_student",
+			data: $("#load_student_form").serialize(),
+			success: function(rval){
+				var assignments=JSON.parse(decode(rval))
+				for(var aidx=0;aidx<assignments.length;aidx++){
+					add_assignment_to_student(assignments[aidx]);
+				}
+			}
+		});
+		e.preventDefault();
+	});
 	load_studentCB();
-
 });//ready
+var load_studentCB=function(){
+	var student_username=get_selected("student_select",0)
+	print("load_studentCB: "+student_username);
+	//Get assignment list, then for each assignment call add_assignment_to_student(a)
+	pval={}
+	pval['student_username']=student_username;
+	$('#load_student_pyld').val(JSON.stringify(pval));
+	$("#load_student_form").submit();
+}
 var createCB=function(){
 	var activity_name=get_selected("activity_select",0);
 	print("create assignment: "+activity_name);
-	//ajax pyld to server; server creates ala RunningLog
-	//views adds to UserProfile
-	//
+	pval={};
+	pval['action']="new_assignment";
+	pval['activity_name']=activity_name;
+	$('#create_pyld').val(JSON.stringify(pval));
+	$("#create_form").submit();
 }
-var load_studentCB=function(){
-	var student_name=get_selected("student_select",0)
-	print("load_studentCB: "+student_name);
+var assignCB=function(e){
+	var a_id=e.target.id.split("_")[1];
+	var ssid="select_student_"+a_id;
+	var uname=get_selected(ssid,1);
+	print("assign "+a_id+" to "+uname);
+	pval={};
+	pval['assignment_id']=a_id;
+	pval['student_username']=uname;
+	$('#assign_pyld').val(JSON.stringify(pval));
+	$("#assign_form").submit();
+}
+var removeCB=function(e){
+	print("removeCB: "+e.target.id);
+	var assignment_id=e.target.id.split("_")[1];
+	var row_id="student_assignment_row_"+assignment_id;
+	var t=document.getElementById("student_assignments");
+	var rows=t.rows;
+	var target_idx=null;
+	for(var ridx=0;ridx<rows.length;ridx++){
+		var r=rows[ridx];
+		if(r.id==row_id)target_idx=ridx;
+	}
+	t.deleteRow(target_idx);//backwards -- should wait for Ajax success before removing, but have info here
+	pval={};
+	pval['assignment_id']=assignment_id;
+	pval['student_username']=get_selected("student_select",1);
+	$('#remove_pyld').val(JSON.stringify(pval));
+	$("#remove_form").submit();
 }
 </script>
 </head>
 <body>
 <div>{{username}}</div>
 <fieldset>
-	<legend>All Assignments</legend>
+	<legend>Manage All</legend>
 	<table id="create_table">
 	<tr>
 	<td>
 		<select id="activity_select">
 		</select>
-		<button id="createtB" onclick="createCB()"><i style="font-size:24px" class="fa">&#xf196;</i></button>
+		<button id="createB" onclick="createCB()"><i style="font-size:24px" class="fa">&#xf196;</i></button>
 	</td>
 	</tr>
 	</table>
 
 	<table id="assignment_table">
-	<tr>
-	<th>Name</th>
-	<th>Activity</th>
-	<th>Edit</th>
-	<th>Test</th>
-	<th>Assign</th>
-	<th>Select</th>
-	<th>Delete</th>
-	</tr>
+		<tr>
+		<th>Title</th>
+		<th>Activity</th>
+		<th>Edit</th>
+		<th>Test</th>
+		<th>Assign</th>
+		<th>Select</th>
+		<th>Delete</th>
+		</tr>
 	</table>
 </fieldset>
 
 
 <fieldset>
-	<legend>Student Assignments</legend>
+	<legend>Manage Student</legend>
 	<select id="student_select" onchange="load_studentCB()"></select>
 
 	<table id="student_assignments">
 		<tr>
-		<th>Name</th>
+		<th>Title</th>
 		<th>Activity</th>
 		<th>Complete</th>
 		</tr>
@@ -105,6 +187,23 @@ var load_studentCB=function(){
 </fieldset>
 
 <button onclick="logout()">Logout</button>
+
+<form id="create_form" method="POST">
+	{% csrf_token %}
+	<input id="create_pyld" type="hidden" name="create_pyld"></input>
+</form>
+<form id="assign_form" method="POST">
+	{% csrf_token %}
+	<input id="assign_pyld" type="hidden" name="assign_pyld"></input>
+</form>
+<form id="remove_form" method="POST">
+	{% csrf_token %}
+	<input id="remove_pyld" type="hidden" name="remove_pyld"></input>
+</form>
+<form id="load_student_form" method="POST">
+	{% csrf_token %}
+	<input id="load_student_pyld" type="hidden" name="load_student_pyld"></input>
+</form>
 
 </body>
 </html>

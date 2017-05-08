@@ -11,7 +11,7 @@ class UserProfile(models.Model):
 	is_parent = models.BooleanField(default=False)
 	credit_balance = models.IntegerField(default=1000)
 	students=PickledObjectField(default=[])
-	assignments=PickledObjectField(default=[])
+	assignments=PickledObjectField(default=[])#would have been better: "assignment_ids"
 
 #@receiver(post_save, sender=User)
 #def ensure_profile_exists(sender, **kwargs):

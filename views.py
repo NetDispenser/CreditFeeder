@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required,user_passes_test
 
 import os,logging,time,json,sys
 import xmlrpc.client
+from creditfeeder.models import *
 
 FORMAT = 'VIEW: %(message)s'
 
@@ -112,12 +113,71 @@ def student_app(request,uname,pyld):
 def parent_app(request,uname,pyld):
 	acct=User.objects.get(username=uname)
 	activities=["ColorMyWorld","NowReadThis","TuxMathScrabble"]
+	assignments=[]
+	for a_id in acct.userprofile.assignments:
+		a=Assignment.objects.get(id=a_id)
+		asst={'id':a_id,'title':a.title,'activity_name':a.activity}
+		assignments.append(asst)
+
 	context={
 		'title':'Parent@CreditFeeder',
 		'username':uname,
-		'json_pyld':json.dumps(pyld),
-		'json_students':json.dumps(acct.userprofile.students),
-		'json_assignments':json.dumps(acct.userprofile.assignments),
-		'json_activities':json.dumps(activities),
+		'str_pyld':json.dumps(pyld),
+		'str_students':json.dumps(acct.userprofile.students),
+		'str_assignments':json.dumps(assignments),
+		'str_activities':json.dumps(activities),
 	}
 	return render(request,'parent_app.html',context)
+
+@login_required
+def create(request):
+	str_pyld=request.POST["create_pyld"]
+	json_pyld=json.loads(str_pyld)
+	activity_name=json_pyld['activity_name']
+	mylogger.debug("create: "+activity_name)
+	a=Assignment()
+	a.author_id=request.user.id
+	a.activity=activity_name
+	a.save()
+	request.user.userprofile.assignments.append(a.id)
+	request.user.userprofile.save()
+	asst={'activity_name':activity_name,'title':'NewAssignment','id':a.id,}
+	return HttpResponse(json.dumps(asst))
+
+@login_required
+def assign(request):
+	str_pyld=request.POST["assign_pyld"]
+	json_pyld=json.loads(str_pyld)
+	assignment_id=json_pyld['assignment_id']
+	a=Assignment.objects.get(id=assignment_id)
+	student_username=json_pyld['student_username']
+	acct=User.objects.get(username=student_username)
+	acct.userprofile.assignments.append(assignment_id)
+	acct.userprofile.save()
+	asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':student_username,}
+	return HttpResponse(json.dumps(asst))
+
+@login_required
+def remove(request):
+	str_pyld=request.POST["remove_pyld"]
+	json_pyld=json.loads(str_pyld)
+	assignment_id=json_pyld['assignment_id']
+	a=Assignment.objects.get(id=assignment_id)
+	student_username=json_pyld['student_username']
+	acct=User.objects.get(username=student_username)
+	acct.userprofile.assignments.remove(assignment_id)
+	acct.userprofile.save()
+	return HttpResponse("Assignmet Removed")
+
+@login_required
+def load_student(request):
+	str_pyld=request.POST["load_student_pyld"]
+	json_pyld=json.loads(str_pyld)
+	student_username=json_pyld['student_username']
+	acct=User.objects.get(username=student_username)
+	assignments=[]
+	for a_id in acct.userprofile.assignments:
+		a=Assignment.objects.get(id=a_id)
+		asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':student_username,}
+		assignments.append(asst)
+	return HttpResponse(json.dumps(assignments))
