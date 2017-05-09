@@ -136,10 +136,7 @@ var assignCB=function(e){
 	$('#assign_pyld').val(JSON.stringify(pval));
 	$("#assign_form").submit();
 }
-var removeCB=function(e){
-	print("removeCB: "+e.target.id);
-	var assignment_id=e.target.id.split("_")[1];
-	var row_id="student_assignment_row_"+assignment_id;
+var remove_student_assignment_row=function(row_id){
 	var t=document.getElementById("student_assignments");
 	var rows=t.rows;
 	var target_idx=null;
@@ -147,7 +144,14 @@ var removeCB=function(e){
 		var r=rows[ridx];
 		if(r.id==row_id)target_idx=ridx;
 	}
-	t.deleteRow(target_idx);//backwards -- should wait for Ajax success before removing, but have info here
+	t.deleteRow(target_idx);
+}
+var removeCB=function(e){
+	print("removeCB: "+e.target.id);
+	var assignment_id=e.target.id.split("_")[1];
+	var row_id="student_assignment_row_"+assignment_id;
+	remove_student_assignment_row(row_id)
+
 	pval={};
 	pval['assignment_id']=assignment_id;
 	pval['student_username']=get_selected("student_select",1);
@@ -170,7 +174,13 @@ var deleteCB=function(e){
 	pval['assignment_id']=a_id;
 	$('#delete_pyld').val(JSON.stringify(pval));
 	$("#delete_form").submit();
-	removeCB(e);//same usable _id at end of e.target.id 
+
+	var row_id="student_assignment_row_"+a_id;
+	remove_student_assignment_row(row_id);
+
+}
+var editCB=function(e){
+	print("editCB: "+e.target.id);
 }
 </script>
 </head>
@@ -211,6 +221,7 @@ var deleteCB=function(e){
 		<th>Title</th>
 		<th>Activity</th>
 		<th>Complete</th>
+		<th>Remove</th>
 		</tr>
 	</table>
 </fieldset>

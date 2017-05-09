@@ -66,6 +66,28 @@ var mkDeleteB=function(a_id){
 	b.addEventListener("click",deleteCB,false)
 	return b;
 }
+var mkTestB=function(a_id){
+	var b=document.createElement("button");
+	b.id="test_"+a_id;
+	b.innerHTML="Test";
+	b.addEventListener("click",testCB,false)
+	return b;
+}
+var mkEditB=function(a_id){
+	var b=document.createElement("button");
+	b.id="edit_"+a_id;
+	b.innerHTML="Edit";
+	b.addEventListener("click",editCB,false)
+	return b;
+}
+var mkEarnB=function(a_id){
+	var b=document.createElement("button");
+	b.id="earn_"+a_id;
+	b.innerHTML="Earn";
+	b.addEventListener("click",testCB,false)
+	return b;
+}
+
 var add_assignment=function(a){
 	var t=document.getElementById("assignment_table");
 	var r=t.insertRow(-1);
@@ -78,10 +100,10 @@ var add_assignment=function(a){
 	c.appendChild(mkHtmlDiv(a['activity_name']))
 
 	var c=r.insertCell(-1);
-	c.appendChild(mkHtmlDiv('EDIT'))
+	c.appendChild(mkEditB(a.id))
 
 	var c=r.insertCell(-1);
-	c.appendChild(mkHtmlDiv('TEST'))
+	c.appendChild(mkTestB(a['activity_name']))
 
 	var c=r.insertCell(-1);
 	c.appendChild(mkAssignB(a.id))
@@ -116,4 +138,23 @@ var add_assignment_to_student=function(a){//the student_username is included in 
 		c.appendChild(mkRemoveB(a.id))
 	}
 	else{print('that student not currently loaded')}
+}
+var testCB=function(e){
+	var activity_name=e.target.id.split("_")[1];
+	print("testCB: "+activity_name);
+	if(activity_name=="ColorMyWorld"){
+		print("launching CMW");
+		var url = "https://ccosse.github.io/colormyworld/";
+		window.open(url);
+	}
+	else if(activity_name=="NowReadThis"){
+		print("launching NRT");
+		var url = "http://www.asymptopia.org/NowReadThis/";
+		window.open(url);
+	}
+	else if(activity_name=="TuxMathScrabble"){
+		print("launching TMS");
+		var url = "http://www.asymptopia.org/TuxMathScrabble-2015/";
+		window.open(url);
+	}
 }
