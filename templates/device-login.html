@@ -1,73 +1,108 @@
 <html>
 <head>
 <title>{{title}}</title>
+<style>
+.pressbutton {
+  padding: 15px 25px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: #fff;
+  background-color: darkorange;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 5px #999;
+	text-align:center;
+	width:250px;
+}
 
+.pressbutton:hover {background-color: orange}
+
+.pressbutton:active {
+  background-color: orange;
+  box-shadow: 0 2px #666;
+  transform: translateY(3px);
+}
+
+.modal{
+	height:100%;
+	width:100%;
+}
+.column {
+  float: left;
+  width: 50%;
+  height:100%;
+}
+@media (orientation: portrait) {
+  .column {
+    width: 100%;
+    height: 50%;
+    display: block;
+  }
+}
+div{text-align:center;}
+#rhs{background-color: #39c968;}
+#lhs{background-color: #0069e9;}
+/* Center the image and position the close button */
+.imgcontainer {
+    text-align: center;
+    margin: 24px 0 12px 0;
+    position: relative;
+}
+
+img.avatar {
+    width: 40%;
+    border-radius: 50%;
+}
+
+</style>
 <link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
 <link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
-<link rel="stylesheet" href="/static/creditfeeder/css/login.css">
+<!--
+<link rel="stylesheet" href="/static/creditmeter/css/creditmeter.css">
+-->
 <script src="/static/creditfeeder/js/jquery.min.js"></script>
 
 <script>
-var decode=function(str){
-	var div = document.createElement('div');
-	div.innerHTML = str;
-	var decoded=str;
-	try{
-		decoded = div.firstChild.nodeValue;
-	}
-	catch(e){;}
-	return decoded;
-}
 $(document).ready(function(){
-	$("#device_div").html("<b>Device IP: </b>{{device_ip}}");
-	var child_pyld={"account_type":"child","device_ip":"{{device_ip}}"};
+	$("#device_div").html("<b>Device Name: </b>{{device_name}}");
+	var child_pyld={"account_type":"child","device_name":"{{device_name}}","device_ip":"{{device_ip}}","device_mac":"{{device_mac}}"};
 	$("#child_pyld").val(JSON.stringify(child_pyld));//prepares for submit
-	var parent_pyld={"account_type":"parent","device_ip":"{{device_ip}}"};
+	var parent_pyld={"account_type":"parent","device_name":"{{device_name}}","device_ip":"{{device_ip}}","device_mac":"{{device_mac}}"};
 	$("#parent_pyld").val(JSON.stringify(parent_pyld));//prepares for submit
+//	$("#lhs").html(window.innerWidth+" x "+window.innerHeight);
 });
 </script>
 </head>
 
 <body>
-<div id="modal" class="modal" style="display:block;">
-	<div class="modal-content">
-		<div class="imgcontainer">
-			<span onclick="document.getElementById('modal').style.display='none'" class="close" title="Close Modal">&times;</span>
-			<i><h2>{{title}}</h2></i>
-		</div>
-
-		<div class="container">
-			<table align="center">
-			<tr><td colspan="2">
-			<div id="device_div"></div>
-			</td></tr>
-			<tr><td>
-				<form class="animate" action="/" method="POST" style="max-width:400px;">
+<div id="modal" class="modal">
+	<div class="row">
+	<div class="container">
+		<div id="lhs" class="column">
+			<div class="imgcontainer">
+	      <img src="static/creditfeeder/images/img_avatar.png" alt="Avatar" class="avatar">
+				<form class="animate" action="/" method="POST">
 					{% csrf_token %}
-					<button type="submit">Child</button>
+					<button type="submit" class="pressbutton">Child</button>
 					<input type="hidden" id="child_pyld" name="login_pyld" value=""></input>
 				</form>
-			</td><td>
-				<form class="animate" action="/" method="POST" style="max-width:400px;">
+	    </div>
+		</div>
+		<div id="rhs" class="column">
+			<div class="imgcontainer">
+	      <img src="static/creditfeeder/images/img_avatar2.png" alt="Avatar" class="avatar">
+				<form class="animate" action="/" method="POST">
 					{% csrf_token %}
-					<button type="submit">Parent</button>
+					<button type="submit" class="pressbutton">Parent</button>
 					<input type="hidden" id="parent_pyld" name="login_pyld" value=""></input>
 				</form>
-			</td></tr>
-			</table>
+	    </div>
 		</div>
+	</div>
 	</div>
 </div>
 
-<script>
-
-var modal = document.getElementById('modal');
-
-window.onclick = function(event) {
-		if (event.target == modal) {
-			modal.style.display = "none";
-		}
-}
-</script>
 </body>
 </html>

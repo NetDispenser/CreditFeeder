@@ -115,7 +115,7 @@ def student_app(request,uname,pyld):
 		'title':'Student@CreditFeeder',
 		'username':uname,
 		'credit_balance':acct.userprofile.credit_balance,
-		'json_pyld':json.dumps(pyld),
+		'str_pyld':json.dumps(pyld),
 		'str_assignments':json.dumps(assignments),
 	}
 	return render(request,'student_app.html',context)
