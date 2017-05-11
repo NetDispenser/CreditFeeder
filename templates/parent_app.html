@@ -17,7 +17,6 @@
     box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
     z-index: 1;
 		width:250px;
-		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
 .dropdown-content a {
@@ -39,7 +38,7 @@
 .attachment{
 	color:#555;
 	border-radius:0px;
-	border:1px solid #999;
+	border:0px solid #999;
 	text-decoration:none;
 }
 
@@ -48,28 +47,40 @@
     width: 100%; /* Full-width */
     background-color: #555; /* Dark-grey background */
     overflow: hidden; /* Overflow due to float */
+		padding:10px 10px;
 }
 
 .attachment-bar a {
     float: left; /* Float links side by side */
 /*    text-align: center; /* Center-align text */
-    width: 20%; /* Equal width (5 icons with 20% width each = 100%)
+    width: 33.3%; /* Equal width (5 icons with 20% width each = 100%)
     padding: 12px 0; /* Some top and bottom padding */
     transition: all 0.3s ease; /* Add transition for hover effects */
     color: #555; /* White text color */
     font-size: 12px; /* Increased font size */
-		padding:5px 5px;
+		padding:50px 50px;
 		cursor:pointer;
 }
 
 .attachment-bar a:hover{
-    background-color: darkorange; /* Add a hover color */
+/*    background-color: #666; /* Add a hover color */
+	box-shadow: 0px 0px 5px 10px rgba(0, 0, 0, 0.4);
 }
+.column {
+  float: left;
+  width: 50%;
+}
+.header{text-align: center;}
+.footer{text-align: center;}
+.attachment_table{background-color: lightyellow;border:solid darkorange 5px;}
+.vspace{display:none;}
 #student_select{font-size:18px}
 @media (orientation:portrait) {
   .dropbtn {width: 150px;}
 	.dropdown-contentP{width:150px;}
-	.attachment-bar a {width:50%;}
+	.attachment-bar a {width:100%;}
+	.column{width:100%;}
+	.vspace{height:30px;display:block;}
 }
 
 </style>
@@ -287,22 +298,42 @@ var typeCB=function(e){
 	</div>
 	<div id="v100" style="height:70px"></div>
 
-	<div class="dropdown">
-	  <button class="pressbutton dropbtn" id="activity_select" style="border-radius:0px;">ColorMyWorld</button>
-	  <div class="dropdown-content">
-	    <a href="#" onclick="typeCB('ColorMyWorld')" id="ColorMyWorld">ColorMyWorld</a>
-	    <a href="#" onclick="typeCB('NowReadThis')" id="NowReadThis">NowReadThis</a>
-	    <a href="#" onclick="typeCB('TuxMathScrabble')" id="TuxMathScrabble">TuxMathScrabble</a>
-	  </div>
-	</div>
-
-	<button class="pressbutton" onclick="createCB()">Create New</button>
-
 	<div class="row" id="row1">
 	  <div class="column" id="column1">
 	    <div class="card" id="card1">
 				<div class="container" id="container1">
+
+					<div class="dropdown">
+					  <button class="pressbutton dropbtn" id="activity_select" style="border-radius:0px;">ColorMyWorld</button>
+					  <div class="dropdown-content">
+					    <a href="#" onclick="typeCB('ColorMyWorld')" id="ColorMyWorld">ColorMyWorld</a>
+					    <a href="#" onclick="typeCB('NowReadThis')" id="NowReadThis">NowReadThis</a>
+					    <a href="#" onclick="typeCB('TuxMathScrabble')" id="TuxMathScrabble">TuxMathScrabble</a>
+					  </div>
+					</div>
+
+					<div class="vspace"></div>
+
+					<button class="pressbutton" onclick="createCB()">Create New</button>
+					<br><br>
 					<div class="attachment-bar" id="attachments_bar"></div>
+
+				</div>
+			</div>
+		</div>
+
+		<div class="column" id="column2">
+	    <div class="card" id="card2">
+				<div class="container" id="container2">
+
+					<div class="dropdown">
+					  <button class="pressbutton dropbtn" id="student_select" style="border-radius:0px;"></button>
+					  <div class="dropdown-content" id="student-usernames"></div>
+						<br><br>
+						<div class="attachment-bar" id="student_attachments_bar"></div>
+
+					</div>
+
 				</div>
 			</div>
 		</div>
@@ -310,11 +341,7 @@ var typeCB=function(e){
 
 
 
-	<div class="dropdown">
-	  <button class="pressbutton dropbtn" id="student_select" style="border-radius:0px;"></button>
-	  <div class="dropdown-content" id="student-usernames">
-	  </div>
-	</div>
+
 
 
 <fieldset>
