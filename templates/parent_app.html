@@ -380,8 +380,8 @@ var typeCB=function(e){
 				<div class="container" id="container2">
 
 					<div class="dropdown">
-					  <button class="dropbtn pressbutton" id="student_dropdown" style="border-radius:0px;font-size:16px;"></button>
-					  <div class="dropdown-content" id="student-usernames"></div>
+					  <button class="dropbtn pressbutton" id="student_dropdown" style="border-radius:0px;width:320px;"></button>
+					  <div class="dropdown-content" id="student-usernames" style="width:320px;"></div>
 					</div>
 
 					<br><br>
@@ -396,7 +396,7 @@ var typeCB=function(e){
 
 
 
-
+<div style="display:none;">
 <fieldset>
 	<legend>Manage All</legend>
 	<table id="create_table">
@@ -436,7 +436,7 @@ var typeCB=function(e){
 		</tr>
 	</table>
 </fieldset>
-
+</div>
 
 <form id="create_form" method="POST">
 	{% csrf_token %}
