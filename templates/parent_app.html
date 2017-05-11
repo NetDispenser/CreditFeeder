@@ -65,6 +65,7 @@
 .attachment-bar a:hover{
     background-color: darkorange; /* Add a hover color */
 }
+#student_select{font-size:18px}
 @media (orientation:portrait) {
   .dropbtn {width: 150px;}
 	.dropdown-contentP{width:150px;}
@@ -96,6 +97,7 @@ $(document).ready(function(){
 	print(assignments.length)
 	print(activities.length)
 
+	var html="";
 	for(var sidx=0;sidx<students.length;sidx++){
 		print(students[sidx])
 		var opt=document.createElement("option")
@@ -103,7 +105,12 @@ $(document).ready(function(){
 		opt.value=students[sidx]
 		opt.text=students[sidx]
 		$("#student_select").append(opt)
+
+		html+='<a href="#">'+students[sidx]+'</a>';
+
 	}
+	$("#student-usernames").html(html);
+	$("#student_select").html(students[0]);
 
 	for(var aidx=0;aidx<activities.length;aidx++){
 		var opt=document.createElement("option")
@@ -299,6 +306,14 @@ var typeCB=function(e){
 				</div>
 			</div>
 		</div>
+	</div>
+
+
+
+	<div class="dropdown">
+	  <button class="pressbutton dropbtn" id="student_select" style="border-radius:0px;"></button>
+	  <div class="dropdown-content" id="student-usernames">
+	  </div>
 	</div>
 
 

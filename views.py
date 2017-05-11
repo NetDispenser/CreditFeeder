@@ -125,7 +125,7 @@ def student_app(request,uname,pyld):
 def parent_app(request,uname,pyld):
 	#The parent interface at credit-feeder
 	acct=User.objects.get(username=uname)
-	stripped_uname=uname[:-8]
+	stripped_uname=uname[:-7]
 	activities=["ColorMyWorld","NowReadThis","TuxMathScrabble"]
 	assignments=[]
 	for a_id in acct.userprofile.assignments:
