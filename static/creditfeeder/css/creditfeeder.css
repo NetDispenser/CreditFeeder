@@ -48,7 +48,7 @@ body{background-color:#0069e9;color:white;}
 }
 
 .icon-bar a:hover {
-    background-color: darkorange; /* Add a hover color */
+/*    background-color: darkorange; /* Add a hover color */
 }
 html {
   box-sizing: border-box;
