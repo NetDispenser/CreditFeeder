@@ -165,17 +165,26 @@ var createAssignmentObj=function(att){
 
 	var bgname,att_color,att_class;
 	var sherbert_colors=["#aaf2aa","#f48da8","#fcb96a",];
-
-	if(att['activity_name']=='ColorMyWorld'){bgname='/static/creditfeeder/images/colormyworld_tile.png';att_class='fa fa-gear';att_color='#8bc98b';}
-	else if(att['activity_name']=='NowReadThis'){bgname='/static/creditfeeder/images/jcdesign.jpg';att_class='fa fa-gear';att_color='#f48da8';}
-	else if(att['activity_name']=='TuxMathScrabble'){bgname='/static/creditfeeder/images/tuxmathscrabble_tile.png';att_class='fa fa-gear';att_color='#d49b57';}
+	var att_class1='fa fa-external-link';
+	var att_class2='fa fa-gear';
+	var att_class3='fa fa-edit';
+	if(att['activity_name']=='ColorMyWorld'){bgname='/static/creditfeeder/images/colormyworld_tile.png';att_color='#8bc98b';}
+	else if(att['activity_name']=='NowReadThis'){bgname='/static/creditfeeder/images/jcdesign.jpg';att_color='#f48da8';}
+	else if(att['activity_name']=='TuxMathScrabble'){bgname='/static/creditfeeder/images/tuxmathscrabble_tile.png';att_color='#d49b57';}
 
 	var attrs=['activity_name','title'];
 	var scidx=parseInt(Math.random()*sherbert_colors.length);
 
-	var header_html="<div class='header' style='font-size:24px;color:"+att_color+"'><i class='"+att_class+"' style='font-size:40px'></i><br>"+att['title'].slice(-15)+"</div>";
-	var body_html="<img src='"+bgname+"' style='width:180px;height:180px;'/>"
-	var footer_html="<div class='footer' style='font-size:24px;color:"+att_color+"'>"+att['activity_name'].slice(-15)+"</div>";
+	var header_html="";
+	header_html+="<div class='header' style='color:"+att_color+"'>";
+	header_html+="<i class='tooltip "+att_class1+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Assign</span></i>";
+	header_html+="<i class='tooltip "+att_class2+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Test</span></i>";
+	header_html+="<i class='tooltip "+att_class3+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Configure</span></i>";
+	header_html+="<br>";
+	header_html+=att['title'].slice(-15)+"</div>";
+
+	var body_html="<img src='"+bgname+"' style='width:200px;height:200px;'/>"
+	var footer_html="<div class='footer' style='color:"+att_color+"'>"+att['activity_name'].slice(-15)+"</div>";
 
 	a.className="attachment";
 	a.id=att['activity_name']+"_attachments-bar";

@@ -58,22 +58,63 @@
     transition: all 0.3s ease; /* Add transition for hover effects */
     color: #555; /* White text color */
     font-size: 12px; /* Increased font size */
-		padding:50px 50px;
+		padding:20px 20px;
 		cursor:pointer;
 }
 
 .attachment-bar a:hover{
 /*    background-color: #666; /* Add a hover color */
-	box-shadow: 0px 0px 5px 10px rgba(0, 0, 0, 0.4);
 }
 .column {
   float: left;
   width: 50%;
 }
-.header{text-align: center;}
-.footer{text-align: center;}
+.header{text-align: center;font-size: 24px;}
+.footer{text-align: center;font-size: 24px;}
 .attachment_table{background-color: lightyellow;border:solid darkorange 5px;}
+.attachment_table:hover{
+	box-shadow: 0px 0px 5px 10px rgba(0, 0, 0, 0.4);
+}
 .vspace{display:none;}
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltiptext {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: -40px;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 1s;
+		font-size: 20px;
+}
+
+.tooltip .tooltiptext::before {
+    content: "";
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+		transform: rotate(180deg);
+    border-color: #555 transparent transparent transparent;
+}
+
+.tooltip:hover .tooltiptext {
+    visibility: visible;
+    opacity: 1;
+}
 #student_select{font-size:18px}
 @media (orientation:portrait) {
   .dropbtn {width: 150px;}
@@ -121,7 +162,7 @@ $(document).ready(function(){
 
 	}
 	$("#student-usernames").html(html);
-	$("#student_select").html(students[0]);
+	$("#student_dropdown").html(students[0]);
 
 	for(var aidx=0;aidx<activities.length;aidx++){
 		var opt=document.createElement("option")
@@ -132,6 +173,9 @@ $(document).ready(function(){
 	}
 
 	for(var aidx=0;aidx<assignments.length;aidx++){
+		var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title']};
+		var a=createAssignmentObj(att);
+		document.getElementById("attachments_bar").appendChild(a);
 		print(assignments[aidx])
 		add_assignment(assignments[aidx])
 	}
@@ -159,7 +203,13 @@ $(document).ready(function(){
 			type: "POST",
 			url: "/assign",
 			data: $("#assign_form").serialize(),
-			success: function(rval){add_assignment_to_student(JSON.parse(decode(rval)))}//change "saveB" color
+			success: function(rval){
+				rval=JSON.parse(decode(rval));
+				add_assignment_to_student(rval);
+				var att={'activity_name':rval['activity_name'],'title':rval['title']};
+				var a=createAssignmentObj(att);
+				document.getElementById("student_attachments_bar").appendChild(a);
+			}//change "saveB" color
 		});
 		e.preventDefault();
 	});
@@ -196,6 +246,9 @@ $(document).ready(function(){
 				var assignments=JSON.parse(decode(rval))
 				for(var aidx=0;aidx<assignments.length;aidx++){
 					add_assignment_to_student(assignments[aidx]);
+					var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title']};
+					var a=createAssignmentObj(att);
+					document.getElementById("student_attachments_bar").appendChild(a);
 				}
 			}
 		});
@@ -214,7 +267,7 @@ var load_studentCB=function(){
 	$("#load_student_form").submit();
 }
 var createCB=function(){
-	var activity_name=document.getElementById("activity_select").innerHTML;
+	var activity_name=document.getElementById("activity_dropdown").innerHTML;
 	print("create assignment: "+activity_name);
 	pval={};
 	pval['action']="new_assignment";
@@ -284,7 +337,7 @@ var logoutCB=function(){
 }
 var typeCB=function(e){
 	print("typeCB: "+e);
-	$("#activity_select").html(e);
+	$("#activity_dropdown").html(e);
 	$(".dropdown-content").click(function(){$(this).toggleClass('hide')});
 }
 
@@ -304,7 +357,7 @@ var typeCB=function(e){
 				<div class="container" id="container1">
 
 					<div class="dropdown">
-					  <button class="pressbutton dropbtn" id="activity_select" style="border-radius:0px;">ColorMyWorld</button>
+					  <button class="pressbutton dropbtn" id="activity_dropdown" style="border-radius:0px;">ColorMyWorld</button>
 					  <div class="dropdown-content">
 					    <a href="#" onclick="typeCB('ColorMyWorld')" id="ColorMyWorld">ColorMyWorld</a>
 					    <a href="#" onclick="typeCB('NowReadThis')" id="NowReadThis">NowReadThis</a>
@@ -327,12 +380,12 @@ var typeCB=function(e){
 				<div class="container" id="container2">
 
 					<div class="dropdown">
-					  <button class="pressbutton dropbtn" id="student_select" style="border-radius:0px;"></button>
+					  <button class="dropbtn pressbutton" id="student_dropdown" style="border-radius:0px;font-size:16px;"></button>
 					  <div class="dropdown-content" id="student-usernames"></div>
-						<br><br>
-						<div class="attachment-bar" id="student_attachments_bar"></div>
-
 					</div>
+
+					<br><br>
+					<div class="attachment-bar" id="student_attachments_bar"></div>
 
 				</div>
 			</div>
