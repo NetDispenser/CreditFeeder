@@ -1,0 +1,92 @@
+body{background-color:#0069e9;color:white;}
+
+.pressbutton {
+  padding: 15px 25px;
+  font-size: 24px;
+  text-align: center;
+  cursor: pointer;
+  outline: none;
+  color: white;
+  background-color: darkorange;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 5px #999;
+	text-align:center;
+	width:250px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.4);
+}
+
+.pressbutton:hover {background-color: orange}
+
+.pressbutton:active {
+  background-color: orange;
+  box-shadow: 0 2px #666;
+  transform: translateY(3px);
+}
+
+/*Horizontal icon-bar*/
+.icon-bar {
+    width: 100%; /* Full-width */
+    background-color: #555; /* Dark-grey background */
+    overflow: hidden; /* Overflow due to float */
+}
+.icon-bar a{
+	float: left; /* Float links side by side */
+	text-align: center; /* Center-align text */
+	padding: 12px 0px; /* Some top and bottom padding */
+	transition: all 0.3s ease; /* Add transition for hover effects */
+	color: white; /* White text color */
+	font-size: 32px; /* Increased font size */
+	cursor:pointer;
+	height:100%;
+}
+.icon-bar .quarter {
+    width: 25%;
+}
+.icon-bar .half {
+    width: 50%;
+}
+
+.icon-bar a:hover {
+    background-color: darkorange; /* Add a hover color */
+}
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+.row{text-align: center;}
+
+.column {
+  float: right;
+  width: 100%;
+  margin-bottom: 16px;
+	margin-top:16px;
+  padding: 0 8px;
+}
+@media (max-width: 650px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+.card {
+/*  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2); */
+}
+.attachment-card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+	font-weight: bold;
+}
+
+.container {
+  padding: 20 16px;
+}
+
+.container::after, .row::after {
+  content: "";
+  clear: both;
+  display: table;
+}

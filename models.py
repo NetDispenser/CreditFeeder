@@ -27,7 +27,7 @@ models.signals.post_save.connect(user_post_save, sender=User)
 
 class Assignment(models.Model):
 	id=models.AutoField(primary_key=True)
-	title=models.CharField(max_length=30,default="New")
+	title=models.CharField(max_length=30,default="New Assignment")
 	date=models.DateField(default=datetime.date.today())
 	author_id=models.IntegerField(default=999)
 	activity=models.CharField(max_length=30,blank=True)

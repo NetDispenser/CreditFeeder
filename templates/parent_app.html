@@ -1,6 +1,76 @@
 <html>
 <style>
-fieldset{width:0%;padding:100px 100px;}
+.dropbtn {
+	border-radius:0px;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+		width:250px;
+		box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {background-color: #f1f1f1;}
+.hide{display:none;}
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.dropdown:hover .dropbtn {
+    background-color: orange;
+}
+.attachment{
+	color:#555;
+	border-radius:0px;
+	border:1px solid #999;
+	text-decoration:none;
+}
+
+
+.attachment-bar{
+    width: 100%; /* Full-width */
+    background-color: #555; /* Dark-grey background */
+    overflow: hidden; /* Overflow due to float */
+}
+
+.attachment-bar a {
+    float: left; /* Float links side by side */
+/*    text-align: center; /* Center-align text */
+    width: 20%; /* Equal width (5 icons with 20% width each = 100%)
+    padding: 12px 0; /* Some top and bottom padding */
+    transition: all 0.3s ease; /* Add transition for hover effects */
+    color: #555; /* White text color */
+    font-size: 12px; /* Increased font size */
+		padding:5px 5px;
+		cursor:pointer;
+}
+
+.attachment-bar a:hover{
+    background-color: darkorange; /* Add a hover color */
+}
+@media (orientation:portrait) {
+  .dropbtn {width: 150px;}
+	.dropdown-contentP{width:150px;}
+	.attachment-bar a {width:50%;}
+}
+
 </style>
 <head>
 <title>{{title}}</title>
@@ -9,6 +79,8 @@ fieldset{width:0%;padding:100px 100px;}
 <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 <link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
 <link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/creditfeeder/css/creditfeeder.css">
+
 <script src="/static/creditfeeder/js/jquery.min.js"></script>
 <script src="/static/creditfeeder/js/utils.js"></script>
 <script>
@@ -52,7 +124,13 @@ $(document).ready(function(){
 			type: "POST",
 			url: "/create",
 			data: $("#create_form").serialize(),
-			success: function(rval){add_assignment(JSON.parse(decode(rval)))}//change "saveB" color
+			success: function(rval){
+				rval=JSON.parse(decode(rval));
+				var att={'activity_name':rval['activity_name'],'title':rval['title']};
+				var a=createAssignmentObj(att);
+				document.getElementById("attachments_bar").appendChild(a);
+				add_assignment(rval)
+			}//change "saveB" color
 		});
 		e.preventDefault();
 	});
@@ -105,6 +183,7 @@ $(document).ready(function(){
 		});
 		e.preventDefault();
 	});
+	typeCB('ColorMyWorld');
 	load_studentCB();
 });//ready
 var load_studentCB=function(){
@@ -117,7 +196,7 @@ var load_studentCB=function(){
 	$("#load_student_form").submit();
 }
 var createCB=function(){
-	var activity_name=get_selected("activity_select",0);
+	var activity_name=document.getElementById("activity_select").innerHTML;
 	print("create assignment: "+activity_name);
 	pval={};
 	pval['action']="new_assignment";
@@ -182,10 +261,47 @@ var deleteCB=function(e){
 var editCB=function(e){
 	print("editCB: "+e.target.id);
 }
+var logoutCB=function(){
+	window.location="/logout";
+}
+var typeCB=function(e){
+	print("typeCB: "+e);
+	$("#activity_select").html(e);
+	$(".dropdown-content").click(function(){$(this).toggleClass('hide')});
+}
+
 </script>
 </head>
-<body>
-<div>{{username}}</div>
+<body style="background-color:#39c968;">
+	<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
+		<a class="quarter"></a>
+		<a class="half">{{username}}</a>
+		<a class="quarter" onclick="logoutCB()"><i style="font-size:38px;" class="fa">&#xf2d3;</i></a>
+	</div>
+	<div id="v100" style="height:70px"></div>
+
+	<div class="dropdown">
+	  <button class="pressbutton dropbtn" id="activity_select" style="border-radius:0px;">ColorMyWorld</button>
+	  <div class="dropdown-content">
+	    <a href="#" onclick="typeCB('ColorMyWorld')" id="ColorMyWorld">ColorMyWorld</a>
+	    <a href="#" onclick="typeCB('NowReadThis')" id="NowReadThis">NowReadThis</a>
+	    <a href="#" onclick="typeCB('TuxMathScrabble')" id="TuxMathScrabble">TuxMathScrabble</a>
+	  </div>
+	</div>
+
+	<button class="pressbutton" onclick="createCB()">Create New</button>
+
+	<div class="row" id="row1">
+	  <div class="column" id="column1">
+	    <div class="card" id="card1">
+				<div class="container" id="container1">
+					<div class="attachment-bar" id="attachments_bar"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
 <fieldset>
 	<legend>Manage All</legend>
 	<table id="create_table">

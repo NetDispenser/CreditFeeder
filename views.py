@@ -105,6 +105,7 @@ def get(request):
 def student_app(request,uname,pyld):
 	#The student interface at credit-feeder
 	acct=User.objects.get(username=uname)
+	stripped_uname=uname[:-8]
 	assignments=[]
 	for a_id in acct.userprofile.assignments:
 		a=Assignment.objects.get(id=a_id)
@@ -113,7 +114,7 @@ def student_app(request,uname,pyld):
 
 	context={
 		'title':'Student@CreditFeeder',
-		'username':uname,
+		'username':stripped_uname,
 		'credit_balance':acct.userprofile.credit_balance,
 		'str_pyld':json.dumps(pyld),
 		'str_assignments':json.dumps(assignments),
@@ -124,6 +125,7 @@ def student_app(request,uname,pyld):
 def parent_app(request,uname,pyld):
 	#The parent interface at credit-feeder
 	acct=User.objects.get(username=uname)
+	stripped_uname=uname[:-8]
 	activities=["ColorMyWorld","NowReadThis","TuxMathScrabble"]
 	assignments=[]
 	for a_id in acct.userprofile.assignments:
@@ -133,7 +135,7 @@ def parent_app(request,uname,pyld):
 
 	context={
 		'title':'Parent@CreditFeeder',
-		'username':uname,
+		'username':stripped_uname,
 		'str_pyld':json.dumps(pyld),
 		'str_students':json.dumps(acct.userprofile.students),
 		'str_assignments':json.dumps(assignments),

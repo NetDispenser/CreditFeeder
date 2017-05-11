@@ -9,6 +9,7 @@ fieldset{width:0%;padding:100px 100px;}
 <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 <link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
 <link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/creditfeeder/css/creditfeeder.css">
 <script src="/static/creditfeeder/js/jquery.min.js"></script>
 <script src="/static/creditfeeder/js/utils.js"></script>
 <script>
@@ -17,29 +18,40 @@ $(document).ready(function(){
 	var t=document.getElementById("student_assignments");
 	for(var aidx=0;aidx<assignments.length;aidx++){
 		a=assignments[aidx];
-		print(a)
-		var r=t.insertRow(-1);
-		r.id="student_assignment_row_"+a.id;
-
-		var c=r.insertCell(-1);
-		c.appendChild(mkHtmlDiv(a['title']))
-
-		var c=r.insertCell(-1);
-		c.appendChild(mkHtmlDiv(a['activity_name']))
-
-		var c=r.insertCell(-1);
-		c.appendChild(mkHtmlDiv(a['complete']))
-
-		var c=r.insertCell(-1);
-		c.appendChild(mkEarnB(a['activity_name']))
+		var pb=document.createElement("button");
+		pb.className="pressbutton";
+		pb.innerHTML=a['title']+"<br>"+a['activity_name'];
+		pb.id="studentassignment_"+a.activity_name;
+		pb.addEventListener("click",testCB,false);
+		document.getElementById("container1").appendChild(pb);
+		document.getElementById("container1").appendChild(document.createElement("br"))
+		document.getElementById("container1").appendChild(document.createElement("br"))
 	}
 });
-var earnCB=function(){
-	print("earnCB");
+var logoutCB=function(){
+	window.location="/logout";
 }
 </script>
 </head>
+
 <body>
+	<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
+		<a class="quarter"></a>
+		<a class="half">{{username}}</a>
+		<a class="quarter" onclick="logoutCB()"><i style="font-size:38px;" class="fa">&#xf2d3;</i></a>
+	</div>
+	<div id="v100" style="height:70px"></div>
+
+	<div class="row" id="row1">
+	  <div class="column" id="column1">
+	    <div class="card" id="card1">
+				<div class="container" id="container1">
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!--
 <div>{{username}}</div>
 <div>Credit Balance: {{credit_balance}}</div>
 <fieldset>
@@ -53,8 +65,8 @@ var earnCB=function(){
 		</tr>
 	</table>
 </fieldset>
-
 <button onclick="logout()">Logout</button>
+-->
 
 </body>
 </html>

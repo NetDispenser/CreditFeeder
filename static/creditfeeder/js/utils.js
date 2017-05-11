@@ -158,3 +158,63 @@ var testCB=function(e){
 		window.open(url);
 	}
 }
+var createAssignmentObj=function(att){
+	var a=document.createElement("a");
+	a.id=att['activity_name']+"_attachments-bar";
+	print("a.id="+a.id);
+
+	var ext=att['activity_name'].slice(-3);
+	var att_color;
+	var att_class;
+	if(ext=='pdf'||ext=='PDF')
+		{att_color="#FC0";att_class="fa fa-file-pdf-o";}
+	else if(ext=='png'||ext=='jpg'||ext=='gif'||ext=='jpeg'||ext=='svg'||ext=='xcf')
+		{att_color="#F66";att_class="fa fa-file-image-o";}
+	else if(ext=='.py'||ext=='.js'||ext=='css'||ext=='tml')
+		{att_color="#AAF";att_class="fa fa-file-code-o";}
+	else if(ext=='mov'||ext=='mp4'||ext=='avi')
+		{att_color="#CF5";att_class="fa fa-file-video-o";}
+	else if(ext=='doc'||ext=='ocx')
+		{att_color="#55F";att_class="fa fa-file-word-o";}
+	else if(ext=='zip'||ext=='tgz'||ext=='tar'||ext=='.gz')
+		{att_color="#F55";att_class="fa fa-file-zip-o";}
+	else if(ext=='mp3'||ext=='snd'||ext=='m4a'||ext=='wav'||ext=='WAV')
+		{att_color="#0B0";att_class="fa fa-file-audio-o";}
+	else if(ext=='txt'||ext=='cii')
+		{att_color="#0FF";att_class="fa fa-file-text-o";}
+	else
+		{att_color="#CF5";att_class="fa fa-file-o";}
+
+	var attrs=['activity_name','title'];
+	var sherbert_colors=["#aaf2aa","#f48da8","#fcb96a",];
+	var scidx=parseInt(Math.random()*sherbert_colors.length);
+	var table_html='<div><center><table class="attachment-card" style="padding:2px 2px;background-color:'+sherbert_colors[scidx]+';border-radius:2px;color:#555;">';
+/*
+	table_html+='<tr><td><table style="background-color:'+att_color+'">'
+	table_html+='<tr><td><div class="renameB" id="'+att['name']+'">RE</div></td></tr>';
+	table_html+='<tr><td><div class="deleteB" id="'+att['name']+'">DE</div></td></tr>';
+	table_html+='</table></td>';
+*/
+//&#xf013;
+	table_html+='<tr>';
+	table_html+='<td><div class="renameB" id="'+att['title']+'"><i id="'+att['title']+'" class="fa fa-gear" style="z-index:100;font-size:40px;color:'+att_color+'"></i></div></td>';
+	table_html+='<td><a href="'+'serve?file='+att['title']+'" target="_blank"><i class="'+att_class+'" style="z-index:100;font-size:40px;color:'+att_color+'"></i></a></td>';
+	table_html+='<td><a href="'+'serve?file='+att['title']+'" target="_blank"><i class="fa fa-edit" style="z-index:100;font-size:40px;color:'+att_color+'"></i></a></td>';
+
+
+	table_html+='</tr>';
+	for(var idx=0;idx<attrs.length;idx++){
+		table_html+='<tr><td colSpan="3"><div style="text-align:center;">';
+		var att_string=String(att[attrs[idx]])//.slice(-14);
+		if(att_string.length==0)att_string="Unknown";
+		table_html+=att_string;
+		table_html+='</div></td></tr>';
+	}
+	table_html+='</table></center></div>';
+
+	a.className="attachment";
+	a.id=att['activity_name']+"_attachments-bar";
+	a.innerHTML=table_html;
+	print(table_html);
+	return a;
+}
