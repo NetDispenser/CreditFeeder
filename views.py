@@ -23,6 +23,31 @@ def logout_view(request):
     request.session.delete()
     return HttpResponseRedirect("/")
 
+def verify_accounts(ip):
+
+	student_uname="%s_STUDENT"%(ip)
+	parent_uname="%s_PARENT"%(ip)
+
+	try:
+		acct=User.objects.get(username=student_uname)
+		mylogger.debug("verified "+student_uname)
+	except:
+		acct=User.objects.create_user(username=student_uname,password='pycon2017')
+		mylogger.debug("verify_accounts created "+student_uname)
+
+	try:
+		acct=User.objects.get(username=parent_uname)
+		mylogger.debug("verified "+parent_uname)
+	except:
+		acct=User.objects.create_user(username=parent_uname,password='pycon2017')
+		acct.userprofile.is_parent=True
+		acct.userprofile.students.append(student_uname)
+		acct.userprofile.save()
+		acct.save()
+		mylogger.debug("verify_accounts created "+parent_uname)
+
+	return 0
+
 def home(request):
 	logging.debug("home");
 	if request.user.is_authenticated():
@@ -40,6 +65,7 @@ def home(request):
 		uname=None
 		acct=None
 		try:
+			rval=verify_accounts(pyld['device_ip'])
 			uname=pyld['device_ip']+"_STUDENT"
 			if pyld['account_type']=="parent":uname=pyld['device_ip']+"_PARENT"
 			acct=User.objects.get(username=uname)
@@ -48,6 +74,8 @@ def home(request):
 			mylogger.debug("logged-in user "+uname)
 
 		except:
+			mylogger.exception("Should not be here now")
+			"""
 			mylogger.debug("creating new account ...")
 			uname=pyld['device_ip']+"_STUDENT"
 			if pyld["account_type"]=="parent":uname=pyld['device_ip']+"_PARENT"
@@ -62,7 +90,7 @@ def home(request):
 
 			mylogger.debug("logging-in "+uname)
 			login(request,acct)
-
+			"""
 		if acct.userprofile.is_parent==True:
 			return parent_app(request,uname,pyld)
 
