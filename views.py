@@ -188,7 +188,8 @@ def remove(request):
 	except:
 		mylogger.debug("failed to remove a_id="+assignment_id+" from "+acct.username);
 
-	return HttpResponse("Assignmet Removed")
+	rval={'id':assignment_id,'widget_id':json_pyld['widget_id']}
+	return HttpResponse(json.dumps(rval))
 
 @login_required
 def delete(request):
@@ -214,7 +215,8 @@ def delete(request):
 		except:
 			mylogger.debug("failed to remove a_id="+assignment_id+" from "+acct.username);
 
-	return HttpResponse("Assignmet Deleted")
+	rval={'id':assignment_id,'widget_id':json_pyld['widget_id']}
+	return HttpResponse(json.dumps(rval))
 
 @login_required
 def load_student(request):
