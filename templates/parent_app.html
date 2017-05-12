@@ -253,6 +253,7 @@ $(document).ready(function(){
 			url: "/load_student",
 			data: $("#load_student_form").serialize(),
 			success: function(rval){
+				print(rval);
 				var assignments=JSON.parse(decode(rval))
 				for(var aidx=0;aidx<assignments.length;aidx++){
 					add_assignment_to_student(assignments[aidx]);
