@@ -250,12 +250,15 @@ var typeCB=function(e){
 	$("#activity_dropdown").html(e);
 	$(".dropdown-content").click(function(){$(this).toggleClass('hide')});
 }
-
+window.onresize=function(){
+	var status=window.innerWidth+" x "+window.innerHeight;
+	$("#debug").html(status);
+}
 </script>
 </head>
 <body style="background-color:#39c968;">
 	<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
-		<a class="quarter"></a>
+		<a class="quarter"><div id="debug"></div></a>
 		<a class="half">{{username}}</a>
 		<a id="logoutB" class="quarter" onclick="logoutCB()"><i style="font-size:38px;" class="fa">&#xf2d3;</i></a>
 	</div>
