@@ -15,17 +15,11 @@ fieldset{width:0%;padding:100px 100px;}
 <script>
 $(document).ready(function(){
 	var assignments=JSON.parse(decode("{{str_assignments}}"));
-	var t=document.getElementById("student_assignments");
 	for(var aidx=0;aidx<assignments.length;aidx++){
-		a=assignments[aidx];
-		var pb=document.createElement("button");
-		pb.className="pressbutton";
-		pb.innerHTML=a['title']+"<br>"+a['activity_name'];
-		pb.id="studentassignment_"+a.activity_name;
-		pb.addEventListener("click",testCB,false);
-		document.getElementById("container1").appendChild(pb);
-		document.getElementById("container1").appendChild(document.createElement("br"))
-		document.getElementById("container1").appendChild(document.createElement("br"))
+//		add_assignment_to_student(assignments[aidx]);
+		var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title'],'id':assignments[aidx]['id'],'mode':2};
+		var a=createAssignmentObj(att);
+		document.getElementById("student_attachments_bar").appendChild(a);
 	}
 });
 var logoutCB=function(){
@@ -34,39 +28,26 @@ var logoutCB=function(){
 </script>
 </head>
 
-<body>
-	<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
-		<a class="quarter"></a>
-		<a class="half">{{username}}</a>
-		<a class="quarter" onclick="logoutCB()"><i style="font-size:38px;" class="fa">&#xf2d3;</i></a>
-	</div>
-	<div id="v100" style="height:70px"></div>
+<body style="background-color:#39c968;">
 
-	<div class="row" id="row1">
-	  <div class="column" id="column1">
-	    <div class="card" id="card1">
-				<div class="container" id="container1">
+		<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
+			<a class="quarter"></a>
+			<a class="half">{{username}}</a>
+			<a id="logoutB" class="quarter" onclick="logoutCB()"><i style="font-size:38px;" class="fa">&#xf2d3;</i></a>
+		</div>
+		<div id="v100" style="height:70px"></div>
+
+		<div class="row" id="row1">
+		  <div class="single_column" id="column2">
+		    <div class="card" id="card2">
+					<div class="container" id="container2">
+
+						<div class="single-attachment-bar" id="student_attachments_bar"></div>
+
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
-
-<!--
-<div>{{username}}</div>
-<div>Credit Balance: {{credit_balance}}</div>
-<fieldset>
-	<legend>Credit-Earning Options</legend>
-	<table id="student_assignments">
-		<tr>
-		<th>Title</th>
-		<th>Activity</th>
-		<th>Complete</th>
-		<th>Earn</th>
-		</tr>
-	</table>
-</fieldset>
-<button onclick="logout()">Logout</button>
--->
 
 </body>
 </html>

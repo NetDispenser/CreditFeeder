@@ -193,12 +193,21 @@ var createAssignmentObj=function(att){
 		header_html+="<br>";
 		header_html+=att['title'].slice(-15)+"</div>";
 	}
-	else{
+	else if(att['mode']==1){
 		header_html+="<div class='header' style='color:"+att_color+"'>";
 //		header_html+="<i onclick='assignCB(\""+a.id+"\")' class='tooltip "+att_class1+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Assign</span></i>";
 		header_html+="<i onclick='testCB(\""+a.id+"\")' class='tooltip "+att_class2+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Test</span></i>";
 //		header_html+="<i onclick='configureCB(\""+a.id+"\")' class='tooltip "+att_class3+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Configure</span></i>";
 		header_html+="<i onclick='removeCB(\""+a.id+"\")' class='tooltip "+att_class4+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Remove</span></i>";
+		header_html+="<br>";
+		header_html+=att['title'].slice(-15)+"</div>";
+	}
+	else{
+		header_html+="<div class='header' style='color:"+att_color+"'>";
+//		header_html+="<i onclick='assignCB(\""+a.id+"\")' class='tooltip "+att_class1+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Assign</span></i>";
+		header_html+="<i onclick='testCB(\""+a.id+"\")' class='tooltip "+att_class2+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Test</span></i>";
+//		header_html+="<i onclick='configureCB(\""+a.id+"\")' class='tooltip "+att_class3+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Configure</span></i>";
+//		header_html+="<i onclick='removeCB(\""+a.id+"\")' class='tooltip "+att_class4+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Remove</span></i>";
 		header_html+="<br>";
 		header_html+=att['title'].slice(-15)+"</div>";
 	}
