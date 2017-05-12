@@ -226,3 +226,108 @@ var createAssignmentObj=function(att){
 	a.innerHTML=tableHTML;
 	return a;
 }
+var load_studentCB=function(){
+//	var student_username=get_selected("student_select",0)
+	var student_username=document.getElementById("student_dropdown").innerHTML;
+	print("load_studentCB: "+student_username);
+	//Get assignment list, then for each assignment call add_assignment_to_student(a)
+	pval={}
+	pval['student_username']=student_username;
+	$('#load_student_pyld').val(JSON.stringify(pval));
+	$("#load_student_form").submit();
+}
+var createCB=function(){
+	var activity_name=document.getElementById("activity_dropdown").innerHTML;
+	print("create assignment: "+activity_name);
+	pval={};
+	pval['action']="new_assignment";
+	pval['activity_name']=activity_name;
+	$('#create_pyld').val(JSON.stringify(pval));
+	$("#create_form").submit();
+}
+var assignCB=function(id){
+	print('assignCB');
+	var a_id=id.split("_")[1];
+	var ssid="select_student_"+a_id;
+	var uname=document.getElementById("student_dropdown").innerHTML;//get_selected(ssid,1);
+	print("assign "+a_id+" to "+uname);
+	pval={};
+	pval['assignment_id']=a_id;
+	pval['student_username']=uname;
+	$('#assign_pyld').val(JSON.stringify(pval));
+	$("#assign_form").submit();
+}
+var remove_student_assignment_row=function(row_id){
+	var t=document.getElementById("student_assignments");
+	var rows=t.rows;
+	var target_idx=null;
+	for(var ridx=0;ridx<rows.length;ridx++){
+		var r=rows[ridx];
+		if(r.id==row_id)target_idx=ridx;
+	}
+	t.deleteRow(target_idx);
+}
+var remove_student_assignment_obj=function(obj_id){
+	print("remove_student_assignment_obj "+obj_id);
+	var sab=document.getElementById("student_attachments_bar");
+	for(var cidx=0;cidx<sab.childNodes.length;cidx++){
+		print("cns[cidx]="+sab.childNodes[cidx].id);
+		if(sab.childNodes[cidx].id==obj_id){
+			sab.removeChild(sab.childNodes[cidx]);
+		}
+	}
+}
+var remove_assignment_obj=function(obj_id){
+	print("remove_assignment_obj "+obj_id);
+	var sab=document.getElementById("attachments_bar");
+	for(var cidx=0;cidx<sab.childNodes.length;cidx++){
+		print("cns[cidx]="+sab.childNodes[cidx].id);
+		if(sab.childNodes[cidx].id==obj_id){
+			sab.removeChild(sab.childNodes[cidx]);
+		}
+	}
+}
+var removeCB=function(id){
+	print("removeCB: "+id);
+	var assignment_id=id.split("_")[1];
+	var row_id="student_assignment_row_"+assignment_id;
+//	remove_student_assignment_row(row_id)
+	pval={};
+	pval['assignment_id']=assignment_id;
+	pval['widget_id']=id;
+	pval['student_username']=document.getElementById("student_dropdown").innerHTML;//get_selected("student_select",1);
+	$('#remove_pyld').val(JSON.stringify(pval));
+	$("#remove_form").submit();
+}
+var deleteCB=function(id){
+	print("deleteCB: "+id);
+	var a_id=id.split("_")[1];
+	var row_id="assignment_table_row_"+a_id;
+	var t=document.getElementById("assignment_table");
+	var rows=t.rows;
+	var target_idx=null;
+	for(var ridx=0;ridx<rows.length;ridx++){
+		var r=rows[ridx];
+		if(r.id==row_id)target_idx=ridx;
+	}
+	t.deleteRow(target_idx);//backwards -- should wait for Ajax success before removing, but have info here
+	pval={};
+	pval['assignment_id']=a_id;
+	pval['widget_id']=id;
+	$('#delete_pyld').val(JSON.stringify(pval));
+	$("#delete_form").submit();
+
+//	var row_id="student_assignment_row_"+a_id;
+//	remove_student_assignment_row(row_id);
+}
+var editCB=function(id){
+	print("editCB: "+id);
+}
+var logoutCB=function(){
+	window.location="/logout";
+}
+var typeCB=function(e){
+	print("typeCB: "+e);
+	$("#activity_dropdown").html(e);
+	$(".dropdown-content").click(function(){$(this).toggleClass('hide')});
+}
