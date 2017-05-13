@@ -75,22 +75,7 @@ def home(request):
 
 		except:
 			mylogger.exception("Should not be here now")
-			"""
-			mylogger.debug("creating new account ...")
-			uname=pyld['device_ip']+"_STUDENT"
-			if pyld["account_type"]=="parent":uname=pyld['device_ip']+"_PARENT"
-			acct=User.objects.create_user(username=uname,password='pycon2017')
-			acct.userprofile.is_parent=False
-			if pyld["account_type"]=="parent":
-				acct.userprofile.is_parent=True
-				default_student=pyld['device_ip']+"_STUDENT"
-				acct.userprofile.students.append(default_student)
-			acct.userprofile.save()
-			acct.save()
-
-			mylogger.debug("logging-in "+uname)
-			login(request,acct)
-			"""
+			
 		if acct.userprofile.is_parent==True:
 			return parent_app(request,uname,pyld)
 
