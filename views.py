@@ -38,6 +38,15 @@ def verify_accounts(ip):
 	try:
 		acct=User.objects.get(username=parent_uname)
 		mylogger.debug("verified "+parent_uname)
+		media_path="/var/www/media/%d"%(acct.id)
+		if not os.path.exists(media_path):
+			mylogger.debug("creating %s"%(media_path))
+			os.mkdir(media_path)
+			cmd="chown -R www-data %s"%(media_path)
+			os.system(cmd)
+			mylogger.debug("media_path ready")
+		else:
+			mylogger.debug("media_path exists")
 	except:
 		acct=User.objects.create_user(username=parent_uname,password='pycon2017')
 		acct.userprofile.is_parent=True
@@ -45,6 +54,15 @@ def verify_accounts(ip):
 		acct.userprofile.save()
 		acct.save()
 		mylogger.debug("verify_accounts created "+parent_uname)
+
+		if not os.path.exists(media_path):
+			mylogger.debug("creating %s"%(media_path))
+			os.mkdir(media_path)
+			cmd="chown -R www-data %s"%(media_path)
+			os.system(cmd)
+			mylogger.debug("media_path ready")
+		else:
+			mylogger.debug("media_path exists")
 
 	return 0
 
@@ -75,7 +93,7 @@ def home(request):
 
 		except:
 			mylogger.exception("Should not be here now")
-			
+
 		if acct.userprofile.is_parent==True:
 			return parent_app(request,uname,pyld)
 

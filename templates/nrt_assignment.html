@@ -1,3 +1,482 @@
 <html>
-<h1>{{title}}</h1>
+<head>
+<title>{{title}}</title>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+<link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
+<link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
+<link rel="stylesheet" href="/static/creditfeeder/css/creditfeeder.css">
+
+<script src="/static/creditfeeder/js/jquery.min.js"></script>
+<script src="/static/creditfeeder/js/utils.js"></script>
+
+<style type="text/css">
+
+	@font-face {
+		font-family: 'Mickey';
+		src:url('/static/tms/mickey.ttf') format('truetype');
+	}
+
+	div.vspace{height:20px;}
+	div.popup{background:#dddddd;visibility:visible;}
+	div.popup:hover{}
+
+	div.choice{color:#000000;font-weight:bold;font-size:16px;}
+	div.choice:hover{color:orange;}
+
+	img.forcereader{width:400px;height:300px;}
+
+	a.anchor_choice{color:green;cursor:pointer;}
+	a.anchor_choice:link{color:green;cursor:pointer;}
+	a.anchor_choice:visited{color:green;}
+	a.anchor_choice:hover{color:orange;}
+
+	div.caption{text-align:justify;width:600px;}
+	div.page{text-align:justify;width:600px;}
+
+</style>
+
+<script>
+var W_IMG=400.;
+var H_IMG=300.;
+var	ASPECT_RATIO=4./3.;
+
+var pgn=0;
+var pgs=[];
+var progress=0;
+var anchor_div_lookup=[];
+var wordlist=[];
+var POPUP_INSTANCE=null;
+
+var vspc=document.createElement("div");
+vspc.className="vspace";
+function b_listener(w,CB){
+
+        if(navigator.appName=="Microsoft Internet Explorer")
+                w.attachEvent("onclick",CB);
+        else
+                w.addEventListener("click",CB,false);
+
+}
+function common_id(){
+        return parseInt(Math.random()*1E6).toString();
+}
+function get_selected(select_id, whichfield){
+        target_select=document.getElementById(select_id);
+        for(var oidx=0;oidx<target_select.options.length;oidx++){
+                if(target_select.options[oidx].selected==1) {
+                        if(whichfield==0)return target_select.options[oidx].text;
+                        return target_select.options[oidx].value;
+                }
+        }
+        return '';
+}
+function set_selected(select_id,select_text){
+        target_select=document.getElementById(select_id);
+        for(var oidx=0;oidx<target_select.options.length;oidx++){
+                if(target_select.options[oidx].text==select_text)
+                        target_select.selectedIndex=oidx;
+        }
+}
+function mklabel(cell,label){
+        bold_node=document.createElement("b");
+        text_node=document.createTextNode(label);
+        bold_node.appendChild(text_node);
+        cell.appendChild(bold_node);
+        cell.className="label";
+        return cell
+}
+
+function getMouseXY(e){
+	mouseX = e.pageX;
+	mouseY = e.pageY;
+}
+function HideChoicesCB(e){
+	ppg_div=document.getElementById("ppg_div");
+	for(var idx=0;idx<anchor_div_lookup.length;idx++){
+		try{
+			child=anchor_div_lookup[idx].popupDiv;
+			child.parentNode.removeChild(child);
+		}
+		catch(e){;}
+	}
+	POPUP_INSTANCE=null;
+}
+function ShowChoicesCB(e){
+
+	if(POPUP_INSTANCE != null){
+		return;
+	}
+	else{
+		HideChoicesCB(e);//extra call
+	}
+
+	target_id=e;
+	for(var idx=0;idx<anchor_div_lookup.length;idx++){
+		if(target_id==anchor_div_lookup[idx].anchor_id){
+			target_div=anchor_div_lookup[idx].popupDiv;
+			target_div.style.position="absolute";
+			target_div.style.left=mouseX+"px";
+			target_div.style.top=mouseY+"px";
+
+			POPUP_INSTANCE=target_div;
+
+			document.getElementById("ppg_div").appendChild(target_div);
+
+			break;
+		}
+	}
+
+}
+function MkPopupDiv(correct_word,candidates,text_id,num_replace){
+	pop_div=document.createElement("div");
+//	pop_div.style.align='center';
+//  pop_div.style.width="200px";
+//  pop_div.style.height="150px";
+	pop_div.className="popup";
+	pop_div.style.zIndex="1";
+
+	used=[];
+	safety_idx=0;
+	safety_max=500;
+
+	correct_idx=parseInt(Math.random()*(num_replace));
+	correct_choice_div=MkChoiceDiv(correct_word,text_id);
+	correct_word_added=false;
+
+	while(used.length<num_replace){
+
+		if( used.length>=correct_idx && correct_word_added==false ){
+			used.push(999);
+			pop_div.appendChild(correct_choice_div);
+			correct_word_added=true;
+			continue;
+		}
+		else{
+			cidx=parseInt(Math.random()*candidates.length);
+			if( used.indexOf(cidx) > -1){
+				safety_idx+=1;
+			}
+			else if( correct_word==wordlist[candidates[cidx]] ){
+				safety_idx+=1;
+			}
+			else{
+				used.push(cidx);
+				choice_div=MkChoiceDiv(wordlist[candidates[cidx]],text_id);
+				pop_div.appendChild(choice_div);
+			}
+			safety_idx+=1;
+			if(safety_idx > safety_max){
+				break;
+			}
+		}
+	}
+
+	if(!correct_word_added){
+		//alert(correct_word+" not added!"+candidates.length);
+		correct_idx=parseInt(Math.random()*(used.length));
+		pop_div.appendChild(correct_choice_div);
+		correct_word_added=true;
+		used.push(999);
+	}
+
+	return pop_div;
+}
+
+function MkChoiceDiv(choice_word,inline_text_node_id){
+
+	textNode=document.createTextNode(choice_word);
+	textNode.id=Math.random();
+	textNode.name=inline_text_node_id;//the handle we'll use in SelectChoiceCB
+
+	choice_div=document.createElement("div");
+	choice_div.className="choice";
+	choice_div.appendChild(textNode);
+	choice_div.addEventListener("click",SelectChoiceDivCB,false);
+//	choice_div.style.align='center';
+	choice_hidden=document.createElement("hidden");
+	choice_hidden.value=inline_text_node_id;
+	choice_div.appendChild(choice_hidden);
+
+	return choice_div;
+}
+function SelectChoiceDivCB(e){
+
+	document.getElementById(e.target.firstChild.name).firstChild.data=e.target.firstChild.data;
+	HideChoicesCB(e);
+
+}
+function clear3(){
+	img_div=document.getElementById("img_div");
+	cap_div=document.getElementById("cap_div");
+	ppg_div=document.getElementById("ppg_div");
+
+	img_div.innerHTML="";
+	cap_div.innerHTML="";
+	ppg_div.innerHTML="";
+
+	cap_div.className="caption";
+	ppg_div.className="page";
+}
+function render_1(){
+
+	img_div=document.getElementById("img_div");
+	cap_div=document.getElementById("cap_div");
+	ppg_div=document.getElementById("ppg_div");
+
+	clear3();
+
+	img=document.createElement("img");
+	url=pgs[pgn]['url'];
+	img.src=url;
+	//img.className="forcereader";
+	img_div.appendChild(vspc);
+	img_div.appendChild(img);
+
+	img.onload=function(){
+		if(img.width<=W_IMG && img.height<=H_IMG){;}
+		else{
+			aspect_ratio=img.width/img.height;
+			rR=aspect_ratio/ASPECT_RATIO;
+
+			if(0){}
+			else if(rR <= 1.){
+				img.setAttribute("height",H_IMG+"px");
+				img.setAttribute("width",aspect_ratio*H_IMG+"px");
+			}
+			else if(rR > 1.){
+				img.setAttribute("width",W_IMG+"px");
+				img.setAttribute("height",W_IMG/aspect_ratio+"px");
+			}
+		}
+	}
+
+	cap_div=document.getElementById("cap_div");
+//	cap_div.style.width=W_IMG+"px";
+	cap_div.innerHTML="<b>Caption: </b>";
+	try{cap_div.innerHTML+=decode(pgs[pgn]['cap']);}
+	catch(e){cap_div.innerHTML+="Decode Error";}
+	cap_div.innerHTML+="<br><br>";
+
+	ppg_div=document.getElementById("ppg_div");
+//	ppg_div.style.width=W_IMG+"px";
+	ppg_div.id="ppg_div";
+	try{ppg_div.innerHTML=decode(pgs[pgn]['ppg']);}
+	catch(e){ppg_div.innerHTML+="Decode Error";}
+
+
+
+}
+function conclude(){
+
+	clear3();
+
+	child=document.getElementById("nextB");
+	child.style.visibility="hidden";
+	child.parentNode.removeChild(child);
+
+	img_div=document.getElementById("img_div");
+
+	t=document.createElement("table");
+//	t.style.align="center";
+
+	r=t.insertRow(-1);
+	c=r.insertCell(-1);
+	c.align="center";
+	c.appendChild(document.createTextNode("Good Work!"));
+
+	r=t.insertRow(-1);
+	c=r.insertCell(-1);
+	c.align="center";
+	collectB=document.createElement("input");
+	collectB.type="submit";
+	collectB.value="Collect Credits";
+	collectB.className="entry";
+	c.appendChild(collectB);
+
+	img_div.appendChild(t);
+
+	pyld='{"action":"collect","plugin":"ForceReader","assignment_id":{{assignment.id}},"credits":{{assignment.credits}}}';
+	document.getElementById("pyld").value=pyld;
+
+}
+function check(){
+
+	rval=true;
+	if("{{am_teacher}}"=="1")return rval;
+	for(aidx=0;aidx<anchor_div_lookup.length;aidx++){
+		n=document.getElementById(anchor_div_lookup[aidx]['anchor_id']);
+		if(n.firstChild.data==anchor_div_lookup[aidx]['correct_word']){
+			//alert(n.firstChild.data+", "+anchor_div_lookup[aidx]['correct_word']);
+		}
+		else rval=false;
+	}
+
+	return rval;
+}
+function take_page(){
+
+	if(progress>1){
+
+		if(check()==true){;}
+		else{return;}
+
+		progress=0;
+		pgn+=1;
+		if(pgn>parseInt("{{assignment.data.num_pages}}")-1){
+			return conclude();
+		}
+	}
+
+	if(progress==0){
+		render_1();
+		progress+=1;
+	}
+	else{
+
+		render_1();
+
+		ppg_div=document.getElementById("ppg_div");
+		ppg_html=ppg_div.innerHTML;
+		ppg_div.innerHTML="";
+
+		candidates=[];
+		wordlist=ppg_html.split(" ");
+
+		//pct_replace stored as "20%" needs transforming:
+		pct_replace="{{assignment.data.pct_replace}}"
+		pct_replace=pct_replace.replace("%","");
+		num_replace=parseInt(wordlist.length*parseFloat(pct_replace)/100.);
+
+		for(var nidx=0;nidx<num_replace;nidx++){
+
+			widx=parseInt(wordlist.length*Math.random());
+			if(candidates.indexOf(widx)>-1){;}
+			else if(wordlist[widx].indexOf(" ")>-1){;}
+			else if(wordlist[widx]==""){;}
+			else candidates.push(widx);
+
+		}
+
+		html="";
+		anchor_div_lookup=[];
+
+		for(var widx=0;widx<wordlist.length;widx++){
+			if(candidates.indexOf(widx)>-1){
+
+				cid=common_id();
+				anchor_id="anchor_"+cid;
+				text_id="text_"+cid;
+				correct_word=wordlist[widx];
+
+				anchorNode="<a class='anchor_choice' id='"+anchor_id+"' onClick='ShowChoicesCB(\""+text_id+"\");'><b><text id='"+text_id+"' name='"+correct_word+"' class='anchor_choice'>[choose]</text></b></a> ";
+				html+=anchorNode;
+
+				popupDiv=MkPopupDiv(correct_word,candidates,text_id,num_replace);
+				popupDiv.id="popup_"+cid;
+
+				struct={'anchor_id':text_id,'popupDiv':popupDiv,'correct_word':correct_word};
+				anchor_div_lookup.push(struct);
+
+			}
+			else{
+				html+=wordlist[widx]+" ";
+			}
+		}
+
+
+		ppg_div.innerHTML=html;
+
+		document.getElementById("footer").style.zIndex="0";
+
+		progress+=1;
+
+	}
+}
+function nextCB(e){
+
+	take_page();
+
+}
+$(document).ready(function(){
+
+	{% for page in assignment.data.pages %}
+		pgs.push({"url":"{{page.img_url}}","ppg":"{{page.paragraph}}","cap":"{{page.caption}}"});
+	{% endfor %}
+
+	md=document.getElementById("mydiv");
+
+	img_div=document.createElement("div");
+//	img_div.style.align="center";
+//	img_div.style.width="400px";
+	img_div.id="img_div";
+
+	cap_div=document.createElement("div");
+	cap_div.align="left";
+//	cap_div.style.width="400px";
+	cap_div.id="cap_div";
+
+
+	ppg_div=document.createElement("div");
+//	ppg_div.align="justify";
+//	ppg_div.style.width="400px";
+	ppg_div.id="ppg_div";
+
+	md.appendChild(img_div);
+	md.appendChild(cap_div);
+	md.appendChild(ppg_div);
+
+	labels=[decode("{{assignment.title}}"),"Plugin: {{assignment.plugin}}","{{assignment.date}}","Credits:{{assignment.credits}}","{{assignment.data.num_pages}} pgs"];
+	types=["h1","h2","h2","h2"];
+
+	t=document.createElement("table");
+//	t.style.width="400px";
+//	t.style.align="center";
+	for(var lidx=0;lidx<labels.length;lidx++){
+		r=t.insertRow(-1);
+		c=r.insertCell(-1);
+		c.align="center";
+		b=document.createElement(types[lidx]);
+		b.appendChild(document.createTextNode(labels[lidx]));
+		c.appendChild(b);
+	}
+	ppg_div.appendChild(t);
+
+	tt=document.createElement("table");
+
+//	tt.style.align="center";
+	rr=tt.insertRow(-1);
+	cc=rr.insertCell(-1);
+	cc.align="center";
+	b=document.createElement("input");
+	b.type="button";
+//	b.style.width="80px";
+	b.value="Next";
+	b.id="nextB";
+	b.className="entry";
+	b_listener(b,nextCB);
+	cc.appendChild(b);
+
+	md.appendChild(tt);
+
+	$('#background_div').trigger('create');
+
+});
+document.onmousemove = getMouseXY;
+
+</script>
+
+
+<body style="background-color:#555;">
+<form action="" method="post" id="nav_form">
+{% csrf_token %}
+<center>
+<div id="mydiv" style="overflow:auto;width:800px;"></div>
+<div id="msgdiv" style="overflow:auto;width:800px;"></div>
+</center>
+<input type="hidden" name="pyld" id="pyld" value="" />
+
+</form>
+</body>
 </html>

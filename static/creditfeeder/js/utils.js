@@ -141,7 +141,7 @@ var add_assignment_to_student=function(a){//the student_username is included in 
 	else{print('that student not currently loaded')}
 }
 var testCB=function(id){
-	print('testCB');
+	print('testCB: '+id);
 	var activity_name=id.split("_")[0];
 	print("testCB: "+activity_name);
 
@@ -152,7 +152,7 @@ var testCB=function(id){
 	}
 	else if(activity_name=="NowReadThis"){
 		print("launching NRT");
-		var url = "/plugins/nrt/test";
+		var url = "/plugins/nrt/test?request=test&id="+id;
 	}
 	else if(activity_name=="TuxMathScrabble"){
 		print("launching TMS");
@@ -170,13 +170,13 @@ var testCB=function(id){
 
 
 var configureCB=function(id){
-	print('configureCB');
+	print('configureCB: '+id);
 	var activity_name=id.split("_")[0];
 	print("configureCB: "+activity_name);
 
 	if(activity_name=="NowReadThis"){
 		print("launching NRT");
-		var url = "/plugins/nrt/config";
+		var url = "/plugins/nrt/config?request=edit&id="+id;
 	}
 	html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
 	$("#tracker").html(html);

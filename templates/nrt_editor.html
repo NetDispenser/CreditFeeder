@@ -6,11 +6,105 @@
 	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
 	<link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
-	<link rel="stylesheet" href="/static/creditfeeder/css/creditfeeder.css">
+	<link rel="stylesheet" href="/static/creditfeeder/css/jquery.mobile-1.4.4.css">
+
+	<script type="text/javascript" src="/static/creditfeeder/js/isel.js"></script>
+	<script type="text/javascript" src="/static/creditfeeder/js/ibutton.js"></script>
+	<script src="/static/creditfeeder/js/utils.js"></script>
 
 	<script src="/static/creditfeeder/js/jquery.min.js"></script>
-	<script src="/static/creditfeeder/js/utils.js"></script>
+	<script src="/static/creditfeeder/js/jquery.mobile-1.4.4.js"></script>
+<style>
+body{ background:#FFFFFF; font-family:Arial,Verdana,sans-serif; font-size:12px; }
+
+a.menu:link{color:#666666;text-decoration:none;}
+a.menu:visited{color:#666666;}
+a.menu:hover{color:#444444 !important;}
+
+
+table.menubar{text-align:center;width:100%;background:#AAAAAA;color:#FFFFFF;}
+div.footer{text-align:center;width:100%;background:#AAAAAA;color:#FFFFFF;}
+div.login{width:600px;text-align:center;background:#AAAAAA;color:#FFFFFF;}
+
+td.label{font-size:20px;color:#444444;font-weight:bold;}
+input.entry{font-size:20px;border:1px solid;bordercolor:#444444;}
+input.entryB{font-size:20px;border:1px solid;bordercolor:#444444;}
+
+input.ilink{border:0px;color:#002986;background-color:transparent;cursor:pointer;}
+input.ilink:hover{font-weight:bold;}
+
+div.dashdiv{overflow:auto;height:300px;background:#EEFFEE;}
+h2.h2dash{color:#444444;}
+
+div.isel_choice{color:#a3acb2;font-weight:bold;font-size:24px;}
+div.isel_choice:hover{color:orange;}
+div.isel_menu{background:#dddddd;visibility:hidden;top:32px;position:relative;}
+div.isel_selected{color:orange;font-weight:bold;font-size:24px;}
+div.iselB{}
+div.ibutton{}
+
+p{text-align:justify;font-size:11pt;}
+p:first-letter {
+  font-size: 4em;
+  height:56px;
+  font-weight:bold;
+  font-family:"DejaVu Sans","DejaVu Sans Mac Name","DejaVu Sans Unix Name","Times New Roman";
+  float: left;
+}
+
+div.newspaper{
+-webkit-column-count:3; /* Chrome, Safari, Opera */
+-moz-column-count:3; /* Firefox */
+column-count:3;
+
+-webkit-column-gap:40px; /* Chrome, Safari, Opera */
+-moz-column-gap:40px; /* Firefox */
+column-gap:40px;
+
+-webkit-column-rule:4px outset #ff00ff; /* Chrome, Safari, Opera */
+-moz-column-rule:4px outset #ff00ff; /* Firefox */
+column-rule:4px outset #ff00ff;
+}
+
+
+a.bignavlink:link{color:#002986;text-decoration:none;}
+a.bignavlink:visited{color:#002986;}
+a.bignavlink:hover{color:#FFFFFF;}
+span.banner{color:#009B00;font-size:14pt;}
+input.ctext {text-align: center;}
+div.popup_lang{background:#9B0000; color:#DDDDDD;left:0px;top:0px;z-index:0;visibility:hidden;}
+div.popup_lang:hover{background:#9B0000; color:#BFBFBF;left:0px;top:0px;z-index:4;visibility:visible;}
+
+
+
+input.assignment_title{text-align:center;width:100%;color:#002986;border:1px solid #555;font-size:30px;font-weight:bold;cursor:pointer;}
+input.flashcard_input{text-align:center;width:350px;color:#002986;border:0px;font-size:24px;font-weight:bold;cursor:pointer;}
+
+tr.throw{background:#002986}
+div.thlabel{color:#FFFFFF;}
+
+div.blurbdiv{background:#000000;color:#FFFFFF;opacity:0.5;top:-32px;left:0;text-align:left;position:relative;}
+td.caroucell{height:160px;background:#FFFFFF;padding:5px;}
+div.panel{background:orange;color:#FFFFFF;width:900px;height:300px;text-align:center;overflow:auto;}
+div.student_div{background:lightgreen;width:900px;height:200px;text-align:center;overflow:auto;}
+
+div.tablabel{background:#002986;color:#d5f4fd;text-align:center;}
+div.tablabel:hover{color:#FFFFFF;cursor:pointer;}
+table.tabs{width:900px;align:center;}
+table.assignments{align:center;}
+
+div.clickable{font-weight:bold;color:#002986;cursor:pointer;}
+div.clickable:hover{font-weight:bold;}
+
+
+#td.accountcell{text-align:center;}
+#table.dashtable{height:400px;width:100%}
+
+
+</style>
+
 <script>
+
 window.num_pages=0;
 window.replace_isel=null;
 window.credits_isel=null;
@@ -18,7 +112,52 @@ window.credits_isel=null;
 var W_IMG=320;//240.;
 var H_IMG=240;//180.;
 var	ASPECT_RATIO=W_IMG/H_IMG;
+function b_listener(w,CB){
 
+        if(navigator.appName=="Microsoft Internet Explorer")
+                w.attachEvent("onclick",CB);
+        else
+                w.addEventListener("click",CB,false);
+
+}
+function decode(str) {
+  var div = document.createElement('div');
+  div.innerHTML = str ;
+  var decoded=str;
+  try{
+  	decoded = div.firstChild.nodeValue;
+  }
+  catch(e){;}
+  return decoded ;
+}
+function common_id(){
+	return parseInt(Math.random()*1E6).toString();
+}
+function get_selected(select_id, whichfield){
+	target_select=document.getElementById(select_id);
+	for(var oidx=0;oidx<target_select.options.length;oidx++){
+		if(target_select.options[oidx].selected==1) {
+			if(whichfield==0)return target_select.options[oidx].text;
+			return target_select.options[oidx].value;
+		}
+	}
+	return '';
+}
+function set_selected(select_id,select_text){
+	target_select=document.getElementById(select_id);
+	for(var oidx=0;oidx<target_select.options.length;oidx++){
+		if(target_select.options[oidx].text==select_text)
+			target_select.selectedIndex=oidx;
+	}
+}
+function mklabel(cell,label){
+	bold_node=document.createElement("b");
+	text_node=document.createTextNode(label);
+	bold_node.appendChild(text_node);
+	cell.appendChild(bold_node);
+	cell.className="label";
+	return cell
+}
 function saveCB(e){
 	page2delete=-1;
 	if(e.target.id.split("_")[1]=="delete"){
@@ -38,7 +177,7 @@ function saveCB(e){
 	if(repeatable=="Repeatable")repeatable=1;
 	else repeatable=0;
 
-	pyld={"action":"save_assignment","page2delete":page2delete,"plugin":"ForceReader","assignment_id":"{{assignment.id}}","num_pgs":window.num_pages,"credits":credits,"pctreplace":pctreplace,"repeatable":repeatable};
+	pyld={"action":"save_assignment","page2delete":page2delete,"plugin":"NowReadThis","assignment_id":"{{assignment.id}}","num_pgs":window.num_pages,"credits":credits,"pctreplace":pctreplace,"repeatable":repeatable};
 
 	document.getElementById("pyld").value=JSON.stringify(pyld);
 
@@ -52,7 +191,7 @@ function unlockCB(e){
 	document.getElementById("saveB").disabled=false;
 }
 function browseCB(e){
-	alert("{{Browse}}");
+	alert("Browse");
 }
 function clearCB(e){
 	_cpg=e.target.id.split("_")[0];
@@ -142,12 +281,12 @@ function pageCB(e,img_url,paragraph,caption){
 		ta.name=window.num_pages.toString()+"_paragraph";
 		ta.style.width="320px";
 		ta.style.height="100%";
-		bg_url="http://www.autoteach.net/static/icons/{{PageText}}";
+		bg_url="/static/creditfeeder/icons/PageText.png";
 		ta.style.background="transparent";
 		ta.style.backgroundImage="url("+bg_url+")";
 
 		var dummy=new Image();
-		dummy.src="http://www.autoteach.net/static/icons/{{PageText}}";
+		dummy.src="/static/creditfeeder/icons/PageText.png";
 		ta.style.height=parseInt(130+H_IMG)+"px";
 
 		ta.style.fontSize="14px";
@@ -207,7 +346,7 @@ function pageCB(e,img_url,paragraph,caption){
 		["default01.png","default02.png","default03.png"]
 	];
 	iCBs=[clearCB,verifyCB];//browseCB,
-	titles=["{{Clear}}","{{Verify}}"];//"{{Browse}}",
+	titles=["Clear","Verify"];//"{{Browse}}",
 
 	_cid=common_id();
 
@@ -219,6 +358,13 @@ function pageCB(e,img_url,paragraph,caption){
 		iID=iIDs[cidx];
 		ibutton=IconButton(icon_sets[cidx],iCBs[cidx],titles[cidx],iID);
 		c.appendChild(ibutton.get());
+/*
+		ibutton=document.createElement("button");
+		ibutton.onclick=iCBs[cidx];
+		ibutton.innerHTML=titles[cidx];
+		ibutton.id=iID;
+		c.appendChild(ibutton);
+*/
 	}
 
 	//SWATCH
@@ -239,7 +385,7 @@ function pageCB(e,img_url,paragraph,caption){
 		w.style.width=W_IMG+"px";
 		w.style.height=H_IMG+"px";
 
-		bg_url="http://www.autoteach.net/static/icons/{{PageImage}}";
+		bg_url="/static/creditfeeder/icons/PageImage.png";
 		w.style.backgroundImage="url("+bg_url+")";
 
 		w.style.align="center";
@@ -275,10 +421,16 @@ function pageCB(e,img_url,paragraph,caption){
 		icon_set=["default01.png","default02.png","default03.png"];
 		iCB=saveCB;
 		iID=window.num_pages.toString()+"_delete";
-		title="{{DeletePage}}";
+		title="DeletePage";
 		ibutton=IconButton(icon_set,iCB,title,iID);
 		nav_cell.appendChild(ibutton.get());
-
+/*
+		ibutton=document.createElement("button");
+		ibutton.onclick=iCB;
+		ibutton.innerHTML=title;
+		ibutton.id=iID;
+		nav_cell.appendChild(ibutton);
+*/
 		r=document.getElementById("pgs_row");
 		c=r.insertCell(-1);
 		c.style.background="#E5E5E5";
@@ -287,6 +439,7 @@ function pageCB(e,img_url,paragraph,caption){
 		window.num_pages+=1;
 
 }
+
 $(document).ready(function(){
 	msd=document.getElementById("msgdiv");
 	msd.innerHTML="<center>"
@@ -314,7 +467,7 @@ $(document).ready(function(){
 
 
 	r=t.insertRow(-1);
-	cvals=["{{PctReplace}}","{{Credits}}","{{Repeatable}}","{{Save}}","{{NewPage}}"];
+	cvals=["PctReplace","Credits","Repeatable","Save","NewPage"];
 	for(var cidx=0;cidx<cvals.length;cidx++){
 		c=r.insertCell(-1);
 		c.align="center";
@@ -335,15 +488,15 @@ $(document).ready(function(){
 	icon_opts=[
 		['5%','10%','15%','20%','25%','30%','40%','50%'],
 		['900','1800','2700','3600'],
-		["{{Repeatable}}","{{NotRepeatable}}"]
+		["Repeatable","NotRepeatable"]
 	];
-	titles=["{{PctReplace}}","{{Credits}}","{{Repeatable}}"];
+	titles=["PctReplace","Credits","Repeatable"];
 	iselIDs=["pctreplaceB","creditsB","repeatableB"];
 
 	//PCT_REPLACE:
 	c=r.insertCell(-1);
 	c.align="center";
-	pctreplace="{{pctreplace}}";
+	pctreplace="pctreplace";
 	idx_pctreplace=icon_opts[0].indexOf(pctreplace);
 	//window.replace_isel=IconSelect(icon_sets[0],icon_opts[0],iselIDs[0],idx_pctreplace,titles[0]);
 	//c.appendChild(window.replace_isel.get());
@@ -373,7 +526,7 @@ $(document).ready(function(){
 ////CREDITS
 	c=r.insertCell(-1);
 	c.align="center";
-	credits="{{credits}}";
+	credits="credits";
 	idx_credits=icon_opts[1].indexOf(credits);
 	//window.credits_isel=IconSelect(icon_sets[3],icon_opts[3],iselIDs[3],idx_credits,titles[3]);
 	//c.appendChild(window.credits_isel.get());
@@ -403,7 +556,7 @@ $(document).ready(function(){
 ////REPEATABLE
 	c=r.insertCell(-1);
 	c.align="center";
-	repeatable="{{repeatable}}";
+	repeatable="repeatable";
 	var idx_repeatable=1;
 	if(repeatable=="False")idx_repeatable=0;
 
@@ -434,7 +587,7 @@ $(document).ready(function(){
 	saveB=document.createElement("input");
 	saveB.type="button";
 	saveB.id="saveB";
-	saveB.value=decode("{{Save}}");
+	saveB.value=decode("Save");
 	saveB.className="ui-btn ui-btn-inline ui-mini ui-corner-all";
 	saveB.setAttribute("data-icon","check");
 	saveB.setAttribute("data-mini","true");
@@ -447,7 +600,7 @@ $(document).ready(function(){
 	pageB=document.createElement("input");
 	pageB.type="button";
 	pageB.id="pageB";
-	pageB.value=decode("{{NewPage}}");
+	pageB.value=decode("NewPage");
 	pageB.className="ui-btn ui-btn-inline ui-mini ui-corner-all";
 	pageB.setAttribute("data-icon","check");
 	pageB.setAttribute("data-mini","true");
@@ -471,6 +624,8 @@ $(document).ready(function(){
 </script>
 
 <body>
+<div id="background_div" data-role="page">
+<div id="content_div" data-role="main" class="ui-content">
 <center>
 <form name="editor" action="" method="post" id="nav_form">
 {% csrf_token %}
@@ -482,5 +637,7 @@ $(document).ready(function(){
 <input type="hidden" name="pyld" id="pyld" value="" />
 </form>
 </center>
+</div>
+</div>
 </body>
 </html>
