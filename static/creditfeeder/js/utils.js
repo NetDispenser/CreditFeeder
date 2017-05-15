@@ -152,7 +152,7 @@ var testCB=function(id){
 	}
 	else if(activity_name=="NowReadThis"){
 		print("launching NRT");
-		var url = "http://www.asymptopia.org/NowReadThis/";
+		var url = "/nrt/test";
 	}
 	else if(activity_name=="TuxMathScrabble"){
 		print("launching TMS");
@@ -169,7 +169,19 @@ var testCB=function(id){
 
 
 
-var configureCB=function(){print('configureCB');}
+var configureCB=function(id){
+	print('configureCB');
+	var activity_name=id.split("_")[0];
+	print("configureCB: "+activity_name);
+
+	if(activity_name=="NowReadThis"){
+		print("launching NRT");
+		var url = "/nrt/config";
+	}
+	html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
+	$("#tracker").html(html);
+	$("#tracker").toggleClass('show');
+}
 
 var createAssignmentObj=function(att){
 	var a=document.createElement("a");

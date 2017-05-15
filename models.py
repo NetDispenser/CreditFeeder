@@ -34,3 +34,6 @@ class Assignment(models.Model):
 	credits=models.IntegerField(default=1800)
 	repeatable=models.BooleanField(default=True,blank=True)
 	data=PickledObjectField()
+	shared=models.BooleanField(default=False,blank=True)
+	moderated=models.BooleanField(default=False,blank=True)
+	locked=models.BooleanField(default=False,blank=True)
