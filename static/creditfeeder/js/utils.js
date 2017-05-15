@@ -152,7 +152,7 @@ var testCB=function(id){
 	}
 	else if(activity_name=="NowReadThis"){
 		print("launching NRT");
-		var url = "/nrt/test";
+		var url = "/plugins/nrt/test";
 	}
 	else if(activity_name=="TuxMathScrabble"){
 		print("launching TMS");
@@ -176,7 +176,7 @@ var configureCB=function(id){
 
 	if(activity_name=="NowReadThis"){
 		print("launching NRT");
-		var url = "/nrt/config";
+		var url = "/plugins/nrt/config";
 	}
 	html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
 	$("#tracker").html(html);

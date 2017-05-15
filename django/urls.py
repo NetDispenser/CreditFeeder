@@ -16,9 +16,15 @@ Including another URLconf
 from django.conf.urls import url
 from django.contrib import admin
 import creditfeeder.views as creditfeeder_views
-
+import creditfeeder.plugins.views as creditfeeder_plugins_views
 urlpatterns = [
+    url(r'^load_student$',creditfeeder_views.load_student,name='load_student'),
+    url(r'^plugins/nrt/config$',creditfeeder_plugins_views.nrt_config,name='nrt_config'),
+    url(r'^plugins/nrt/test$',creditfeeder_plugins_views.nrt_test,name='nrt_test'),
+    url(r'^remove$',creditfeeder_views.remove,name='remove'),
+    url(r'^delete$',creditfeeder_views.delete,name='delete'),
     url(r'^create$',creditfeeder_views.create,name='create'),
+    url(r'^assign$',creditfeeder_views.assign,name='assign'),
     url(r'^get$',creditfeeder_views.get,name='get'),
     url(r'^logout$',creditfeeder_views.logout_view,name='logout'),
     url(r'^feeder$',creditfeeder_views.home,name='home'),

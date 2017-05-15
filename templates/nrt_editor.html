@@ -1,0 +1,486 @@
+<html>
+<head>
+	<title>{{title}}</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+	<link rel="shortcut icon" href="/static/creditfeeder/images/anim.png">
+	<link rel="stylesheet" href="/static/creditfeeder/css/font-awesome.min.css">
+	<link rel="stylesheet" href="/static/creditfeeder/css/creditfeeder.css">
+
+	<script src="/static/creditfeeder/js/jquery.min.js"></script>
+	<script src="/static/creditfeeder/js/utils.js"></script>
+<script>
+window.num_pages=0;
+window.replace_isel=null;
+window.credits_isel=null;
+
+var W_IMG=320;//240.;
+var H_IMG=240;//180.;
+var	ASPECT_RATIO=W_IMG/H_IMG;
+
+function saveCB(e){
+	page2delete=-1;
+	if(e.target.id.split("_")[1]=="delete"){
+		page2delete=parseInt(e.target.id.split("_")[0]);
+	}
+
+	for(var pidx=0;pidx<window.num_pages;pidx++){
+		idn=pidx.toString()+"_paragraph";
+		ta=document.getElementById(idn);
+		while(ta.value.indexOf("\n")>-1)
+			ta.value=ta.value.replace("\n"," ");
+	}
+
+	pctreplace=get_selected("pct_select");
+	credits=get_selected("credits_select");
+	repeatable=get_selected("repeatable_select");
+	if(repeatable=="Repeatable")repeatable=1;
+	else repeatable=0;
+
+	pyld={"action":"save_assignment","page2delete":page2delete,"plugin":"ForceReader","assignment_id":"{{assignment.id}}","num_pgs":window.num_pages,"credits":credits,"pctreplace":pctreplace,"repeatable":repeatable};
+
+	document.getElementById("pyld").value=JSON.stringify(pyld);
+
+	document.forms["editor"].submit();
+}
+function unlockCB(e){
+	cvals=["title","pct_replace","credits","repeatable"];
+	for(var cidx=0;cidx<cvals.length;cidx++){
+		document.getElementById(cvals[cidx]).disabled=false;
+	}
+	document.getElementById("saveB").disabled=false;
+}
+function browseCB(e){
+	alert("{{Browse}}");
+}
+function clearCB(e){
+	_cpg=e.target.id.split("_")[0];
+	_cid=e.target.id.split("_")[2];
+	url_id=_cpg+"_url";
+	document.getElementById(url_id).value="";
+	caption_id=_cpg+"_caption";
+	document.getElementById(caption_id).value="";
+
+	child_id=_cpg+"_img";
+	child=document.getElementById(child_id);
+	child.parentNode.removeChild(child);
+
+}
+
+function verifyCB(e){
+	try{
+		_cpg=e.target.id.split("_")[0];
+		//_cid=e.target.id.split("_")[2];
+		url=document.getElementById(_cpg+"_url").value;
+		img=document.createElement("img");
+		img.src=url;
+		img.id=_cpg+"_img";
+
+		img.onload=function(){
+			if(img.width<=W_IMG && img.height<=H_IMG){;}
+			else{
+				aspect_ratio=img.width/img.height;
+				rR=aspect_ratio/ASPECT_RATIO;
+
+				if(0){}
+				else if(rR <= 1.){
+					img.setAttribute("height",H_IMG+"px");
+					img.setAttribute("width",aspect_ratio*H_IMG+"px");
+				}
+				else if(rR > 1.){
+					img.setAttribute("width",W_IMG+"px");
+					img.setAttribute("height",W_IMG/aspect_ratio+"px");
+				}
+			}
+		}
+
+		swatch=document.getElementById(_cpg+"_swatch");
+		for(var cidx=0;cidx<swatch.childNodes.length;cidx++)
+			swatch.removeChild(swatch.childNodes[0]);
+
+		document.getElementById(_cpg+"_swatch").appendChild(img);
+	}
+	catch(e){alert(e);}
+}
+function pageCB(e,img_url,paragraph,caption){
+
+
+		d=document.getElementById("xdiv");
+
+		t=document.createElement("table");
+
+	//TABLE HEADER
+		th_row=t.insertRow(-1);
+		th_row.className="throw";
+		lb=document.createElement("div");
+		lb.className="thlabel";
+		lb.innerHTML="Page "+window.num_pages;
+		thc=th_row.insertCell(-1);
+		thc.colSpan="2";
+		thc.appendChild(lb);
+
+	//COLUMN HEADERS
+		header_row=t.insertRow(-1);
+		c=header_row.insertCell(-1);
+		c.align="cF";
+		mklabel(c,"Paragraph Text");
+
+		c=header_row.insertCell(-1);
+		c.align="center";
+		mklabel(c,"Image");
+
+		body_row=t.insertRow(-1);
+		lhs_cell=body_row.insertCell(-1);
+		rhs_cell=body_row.insertCell(-1);
+
+		cid=common_id();
+
+	//BODY
+		ta=document.createElement("textarea");
+		ta.id=window.num_pages.toString()+"_paragraph";
+		ta.name=window.num_pages.toString()+"_paragraph";
+		ta.style.width="320px";
+		ta.style.height="100%";
+		bg_url="http://www.autoteach.net/static/icons/{{PageText}}";
+		ta.style.background="transparent";
+		ta.style.backgroundImage="url("+bg_url+")";
+
+		var dummy=new Image();
+		dummy.src="http://www.autoteach.net/static/icons/{{PageText}}";
+		ta.style.height=parseInt(130+H_IMG)+"px";
+
+		ta.style.fontSize="14px";
+		ta.className="entry";
+		if(paragraph)ta.value=decode(paragraph);
+
+		lhs_cell.appendChild(ta);
+
+	//NAV
+		nav_row=t.insertRow(-1);
+		nav_cell=nav_row.insertCell(-1);
+		nav_cell.align="right";
+		nav_cell.colSpan="2";
+
+
+	//URL TABLE
+		url_table=document.createElement("table");
+		url_table.style.width="100%";
+
+		r=url_table.insertRow(-1);
+		c=r.insertCell(-1);
+		c.colSpan="3";
+		c.align="center";
+		c.style.width="100%";
+
+		tt=document.createElement("table");
+		tt.style.width="95%";
+		rr=tt.insertRow(-1);
+		mklabel(rr.insertCell(-1),"url:");
+		cc=rr.insertCell(-1);
+		cc.style.width="100%";
+		w=document.createElement("input");
+		w.id=window.num_pages.toString()+"_url";
+		w.name=window.num_pages.toString()+"_url";
+		w.className="entry";
+		w.style.background="transparent";
+
+		if(img_url)w.value=img_url;
+		else{
+			try{
+				_pn=(window.num_pages-1).toString();
+				last_url_id=_pn+"_url";
+				w.value=document.getElementById(last_url_id).value;
+			}
+			catch(e){}
+		}
+		w.style.width="100%";
+		cc.appendChild(w);
+
+		c.appendChild(tt);
+
+	//3 BUTTONS
+	r=url_table.insertRow(-1);
+	icon_sets=[
+		["default01.png","default02.png","default03.png"],
+		["default01.png","default02.png","default03.png"],
+		["default01.png","default02.png","default03.png"]
+	];
+	iCBs=[clearCB,verifyCB];//browseCB,
+	titles=["{{Clear}}","{{Verify}}"];//"{{Browse}}",
+
+	_cid=common_id();
+
+
+	iIDs=[window.num_pages+"_"+_cid+"_clear",window.num_pages+"_"+_cid+"_verify"];////window.num_pages+"_"+_cid+"_browse",
+	for(var cidx=0;cidx<iIDs.length;cidx++){
+		c=r.insertCell(-1);
+		c.align="center";
+		iID=iIDs[cidx];
+		ibutton=IconButton(icon_sets[cidx],iCBs[cidx],titles[cidx],iID);
+		c.appendChild(ibutton.get());
+	}
+
+	//SWATCH
+		r=url_table.insertRow(-1);
+		c=r.insertCell(-1);
+		c.align="center";
+		c.colSpan="3";
+
+		tt=document.createElement("table");
+		tt.cellSpacing="1px";
+		//tt.style.background="black";
+		tt.style.width="95%";
+		rr=tt.insertRow(-1);
+		cc=rr.insertCell(-1);
+		cc.style.width="100%";
+		w=document.createElement("div");
+		//w.style.background="#9A9A9A";
+		w.style.width=W_IMG+"px";
+		w.style.height=H_IMG+"px";
+
+		bg_url="http://www.autoteach.net/static/icons/{{PageImage}}";
+		w.style.backgroundImage="url("+bg_url+")";
+
+		w.style.align="center";
+		w.id=window.num_pages.toString()+"_swatch";
+		w.name=window.num_pages.toString()+"_swatch";
+		cc.appendChild(w);
+
+		c.appendChild(tt);
+
+	//CAPTION
+		r=url_table.insertRow(-1);
+		caption_row=url_table.insertRow(-1);
+		caption_cell=caption_row.insertCell(-1);
+		caption_cell.colSpan="3";
+		caption_cell.align="center";
+		ta=document.createElement("textarea");
+		ta.id=window.num_pages.toString()+"_caption";
+		ta.name=window.num_pages.toString()+"_caption";
+		ta.style.width="95%";
+		ta.style.height="60px";
+		ta.style.background="transparent";
+		ta.style.fontSize="14px";
+
+		if(caption)ta.value=decode(caption);
+		caption_cell.appendChild(ta);
+
+		rhs_cell.appendChild(url_table);
+
+
+
+
+	//FOOTER
+		icon_set=["default01.png","default02.png","default03.png"];
+		iCB=saveCB;
+		iID=window.num_pages.toString()+"_delete";
+		title="{{DeletePage}}";
+		ibutton=IconButton(icon_set,iCB,title,iID);
+		nav_cell.appendChild(ibutton.get());
+
+		r=document.getElementById("pgs_row");
+		c=r.insertCell(-1);
+		c.style.background="#E5E5E5";
+		c.appendChild(t);
+
+		window.num_pages+=1;
+
+}
+$(document).ready(function(){
+	msd=document.getElementById("msgdiv");
+	msd.innerHTML="<center>"
+
+	{% if messages %}
+	    {% for message in messages %}
+	        msd.innerHTML+="<h2>{{ message }}</h2>";
+	    {% endfor %}
+	{% endif %}
+
+
+	t=document.createElement("table");
+	t.id="var_table";
+
+	tr=t.insertRow(-1);
+	tc=tr.insertCell(-1);
+	tc.colSpan="40";
+	ta=document.createElement("input");
+	ta.value=decode("{{assignment.title}}");
+	ta.id="title";
+	ta.name="title";
+	ta.style.textAlign="center";
+	ta.className="assignment_title";
+	tc.appendChild(ta);
+
+
+	r=t.insertRow(-1);
+	cvals=["{{PctReplace}}","{{Credits}}","{{Repeatable}}","{{Save}}","{{NewPage}}"];
+	for(var cidx=0;cidx<cvals.length;cidx++){
+		c=r.insertCell(-1);
+		c.align="center";
+		c.width="100px";
+		jQuery('<div/>',{
+			html:"<th>"+cvals[cidx]+"</th>",
+		}).appendTo(c);
+
+	}
+
+	r=t.insertRow(-1);
+	icon_sets=[
+		["default01.png","default02.png","default03.png"],
+		["default01.png","default02.png","default03.png"],
+		["default01.png","default02.png","default03.png"]
+	];
+
+	icon_opts=[
+		['5%','10%','15%','20%','25%','30%','40%','50%'],
+		['900','1800','2700','3600'],
+		["{{Repeatable}}","{{NotRepeatable}}"]
+	];
+	titles=["{{PctReplace}}","{{Credits}}","{{Repeatable}}"];
+	iselIDs=["pctreplaceB","creditsB","repeatableB"];
+
+	//PCT_REPLACE:
+	c=r.insertCell(-1);
+	c.align="center";
+	pctreplace="{{pctreplace}}";
+	idx_pctreplace=icon_opts[0].indexOf(pctreplace);
+	//window.replace_isel=IconSelect(icon_sets[0],icon_opts[0],iselIDs[0],idx_pctreplace,titles[0]);
+	//c.appendChild(window.replace_isel.get());
+
+	pct_select=document.createElement("select");
+	pct_select.name="pct_select";
+	pct_select.id="pct_select";
+	pct_select.setAttribute("data-native-menu","false");
+	pct_select.setAttribute("data-mini","true");
+
+	as=icon_opts[0];
+
+	for(var aidx=0;aidx<as.length;aidx++){
+		opt=document.createElement("option");
+		opt.text=as[aidx];
+		opt.value=as[aidx];
+		opt.selected=0;
+		if(as[aidx]==pctreplace)
+			opt.selected=1;
+		pct_select.add(opt,pct_select.options[pct_select.options.length]);
+	}
+	pct_select_div=document.createElement("div");
+	pct_select_div.setAttribute("data-role","ui-contain");
+	pct_select_div.appendChild(pct_select);
+	c.appendChild(pct_select_div);
+
+////CREDITS
+	c=r.insertCell(-1);
+	c.align="center";
+	credits="{{credits}}";
+	idx_credits=icon_opts[1].indexOf(credits);
+	//window.credits_isel=IconSelect(icon_sets[3],icon_opts[3],iselIDs[3],idx_credits,titles[3]);
+	//c.appendChild(window.credits_isel.get());
+
+	credits_select=document.createElement("select");
+	credits_select.name="credits_select";
+	credits_select.id="credits_select";
+	credits_select.setAttribute("data-native-menu","false");
+	credits_select.setAttribute("data-mini","true");
+
+	as=icon_opts[1];
+
+	for(var aidx=0;aidx<as.length;aidx++){
+		opt=document.createElement("option");
+		opt.text=as[aidx];
+		opt.value=as[aidx];
+		opt.selected=0;
+		if(as[aidx]==credits)
+			opt.selected=1;
+		credits_select.add(opt,credits_select.options[credits_select.options.length]);
+	}
+	credits_select_div=document.createElement("div");
+	credits_select_div.setAttribute("data-role","ui-contain");
+	credits_select_div.appendChild(credits_select);
+	c.appendChild(credits_select_div);
+
+////REPEATABLE
+	c=r.insertCell(-1);
+	c.align="center";
+	repeatable="{{repeatable}}";
+	var idx_repeatable=1;
+	if(repeatable=="False")idx_repeatable=0;
+
+	repeatable_select=document.createElement("select");
+	repeatable_select.name="repeatable_select";
+	repeatable_select.id="repeatable_select";
+	repeatable_select.setAttribute("data-native-menu","false");
+	repeatable_select.setAttribute("data-mini","true");
+
+	as=icon_opts[2];
+
+	for(var aidx=0;aidx<as.length;aidx++){
+		opt=document.createElement("option");
+		opt.text=as[aidx];
+		opt.value=as[aidx];
+		opt.selected=0;
+		if(aidx==idx_repeatable)
+			opt.selected=1;
+
+		repeatable_select.add(opt,repeatable_select.options[repeatable_select.options.length]);
+	}
+	repeatable_select_div=document.createElement("div");
+	repeatable_select_div.setAttribute("data-role","ui-contain");
+	repeatable_select_div.appendChild(repeatable_select);
+	c.appendChild(repeatable_select_div);
+
+////SAVE
+	saveB=document.createElement("input");
+	saveB.type="button";
+	saveB.id="saveB";
+	saveB.value=decode("{{Save}}");
+	saveB.className="ui-btn ui-btn-inline ui-mini ui-corner-all";
+	saveB.setAttribute("data-icon","check");
+	saveB.setAttribute("data-mini","true");
+	saveB.addEventListener("click",saveCB,false);
+	c=r.insertCell(-1);
+	c.appendChild(saveB);
+
+
+////PAGE
+	pageB=document.createElement("input");
+	pageB.type="button";
+	pageB.id="pageB";
+	pageB.value=decode("{{NewPage}}");
+	pageB.className="ui-btn ui-btn-inline ui-mini ui-corner-all";
+	pageB.setAttribute("data-icon","check");
+	pageB.setAttribute("data-mini","true");
+	pageB.addEventListener("click",pageCB,false);
+	c=r.insertCell(-1);
+	c.appendChild(pageB);
+
+	d=document.getElementById("ctrl_div");
+	d.appendChild(t);
+
+	{% for page in assignment.data.pages %}
+		pageCB(null,"{{page.img_url}}","{{page.paragraph}}","{{page.caption}}");
+	{% endfor %}
+
+	if(window.num_pages==0)
+		pageCB(null,null,null,null);
+
+
+	$('#ctrl_div').trigger('create');
+});
+</script>
+
+<body>
+<center>
+<form name="editor" action="" method="post" id="nav_form">
+{% csrf_token %}
+<div id="msgdiv"></div>
+<div id="ctrl_div"></div>
+<div id="pgs_div" style="width:100%;overflow:auto">
+	<table cellSpacing="20px"><tr id="pgs_row" style="width:100%;overflow:auto"></tr></table>
+</div>
+<input type="hidden" name="pyld" id="pyld" value="" />
+</form>
+</center>
+</body>
+</html>

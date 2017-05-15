@@ -56,7 +56,7 @@ ROOT_URLCONF = 'feeder.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['/creditmeter/templates/','/creditmeter/plugins/nrt/templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
