@@ -22,19 +22,25 @@ $(document).ready(function(){
 		document.getElementById("student_attachments_bar").appendChild(a);
 	}
 });
+var trackerCB=function(){
+	$("#tracker").toggleClass('show');
+//	window.open("/lanwatch");
+}
 </script>
 </head>
 
 <body>
 
-		<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
+	<div id="tracker" onclick="trackerCB()" style="position:fixed;z-index:20;left:0px;top:0px;"></div>
+
+	<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
 			<a class="quarter"></a>
 			<a class="half">{{username}}</a>
 			<a id="logoutB" class="quarter" onclick="logout()"><i style="font-size:38px;" class="fa">&#xf08b;</i></a>
-		</div>
-		<div id="v100" style="height:70px"></div>
+	</div>
+	<div id="v100" style="height:70px"></div>
 
-		<div class="row" id="row1">
+	<div class="row" id="row1">
 		  <div class="column" id="column2" style="width:100%">
 		    <div class="card" id="card2">
 					<div class="container" id="container2">
@@ -44,7 +50,7 @@ $(document).ready(function(){
 					</div>
 				</div>
 			</div>
-		</div>
+	</div>
 
 </body>
 </html>

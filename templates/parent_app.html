@@ -254,9 +254,18 @@ window.onresize=function(){
 	var status=window.innerWidth+" x "+window.innerHeight;
 	$("#debug").html(status);
 }
+var trackerCB=function(){
+	print("trackerCB 01");
+	$("#tracker").toggleClass('show');
+	print("trackerCB 02");
+//	window.open("/lanwatch");
+}
 </script>
 </head>
 <body style="background-color:#39c968;">
+
+	<div id="tracker" onclick="trackerCB()" style="position:fixed;z-index:20;left:0px;top:0px;"></div>
+
 	<div class="icon-bar" style="position:fixed;z-index:10;left:0px;top:0px;" id="icon_bar">
 		<a class="quarter"><div id="debug"></div></a>
 		<a class="half">{{username}}</a>
@@ -275,6 +284,10 @@ window.onresize=function(){
 					    <a href="#" onclick="typeCB('ColorMyWorld')" id="ColorMyWorld">ColorMyWorld</a>
 					    <a href="#" onclick="typeCB('NowReadThis')" id="NowReadThis">NowReadThis</a>
 					    <a href="#" onclick="typeCB('TuxMathScrabble')" id="TuxMathScrabble">TuxMathScrabble</a>
+							<a href="#" onclick="typeCB('Gears.activity')" id="Gears.activity">Gears</a>
+							<a href="#" onclick="typeCB('PhysicsJS.activity')" id="PhysicsJS.activity">PhysicsJS</a>
+							<a href="#" onclick="typeCB('Clock.activity')" id="Clock.activity">Clocks</a>
+							<a href="#" onclick="typeCB('Abecedarium.activity')" id="Abecedarium.activity">Abecedarium</a>
 					  </div>
 					</div>
 

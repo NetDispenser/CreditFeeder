@@ -144,22 +144,31 @@ var testCB=function(id){
 	print('testCB');
 	var activity_name=id.split("_")[0];
 	print("testCB: "+activity_name);
+
+
 	if(activity_name=="ColorMyWorld"){
 		print("launching CMW");
 		var url = "https://ccosse.github.io/colormyworld/";
-		window.open(url);
 	}
 	else if(activity_name=="NowReadThis"){
 		print("launching NRT");
 		var url = "http://www.asymptopia.org/NowReadThis/";
-		window.open(url);
 	}
 	else if(activity_name=="TuxMathScrabble"){
 		print("launching TMS");
 		var url = "http://www.asymptopia.org/TuxMathScrabble-2015/";
-		window.open(url);
 	}
+	else{
+		url="/static/sugarizer/activities/"+activity_name+"/index.html";
+	}
+	html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
+	$("#tracker").html(html);
+	$("#tracker").toggleClass('show');
+
 }
+
+
+
 var configureCB=function(){print('configureCB');}
 
 var createAssignmentObj=function(att){
@@ -179,6 +188,10 @@ var createAssignmentObj=function(att){
 	if(att['activity_name']=='ColorMyWorld'){bgname='/static/creditfeeder/images/colormyworld_tile.png';att_color='#8bc98b';}
 	else if(att['activity_name']=='NowReadThis'){bgname='/static/creditfeeder/images/jcdesign.jpg';att_color='#f48da8';}
 	else if(att['activity_name']=='TuxMathScrabble'){bgname='/static/creditfeeder/images/tuxmathscrabble_tile.png';att_color='#d49b57';}
+	else if(att['activity_name']=='Gears.activity'){bgname='/static/creditfeeder/images/gears_activity.png';att_color='#550000';}
+	else if(att['activity_name']=='Clock.activity'){bgname='/static/creditfeeder/images/clocks.png';att_color='#550055';}
+	else if(att['activity_name']=='PhysicsJS.activity'){bgname='/static/creditfeeder/images/physicsjs.png';att_color='#555500';}
+	else if(att['activity_name']=='Abecedarium.activity'){bgname='/static/creditfeeder/images/abecederium.png';att_color='#005500';}
 
 	var attrs=['activity_name','title'];
 	var scidx=parseInt(Math.random()*sherbert_colors.length);
@@ -191,7 +204,7 @@ var createAssignmentObj=function(att){
 		header_html+="<i onclick='configureCB(\""+a.id+"\")' class='tooltip "+att_class3+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Configure</span></i>";
 		header_html+="<i onclick='deleteCB(\""+a.id+"\")' class='tooltip "+att_class4+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Delete</span></i>";
 		header_html+="<br>";
-		header_html+=att['title'].slice(-15)+"</div>";
+		header_html+=att['title'].slice(0,15)+"</div>";
 	}
 	else if(att['mode']==1){
 		header_html+="<div class='header' style='color:"+att_color+"'>";
@@ -200,7 +213,7 @@ var createAssignmentObj=function(att){
 //		header_html+="<i onclick='configureCB(\""+a.id+"\")' class='tooltip "+att_class3+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Configure</span></i>";
 		header_html+="<i onclick='removeCB(\""+a.id+"\")' class='tooltip "+att_class4+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Remove</span></i>";
 		header_html+="<br>";
-		header_html+=att['title'].slice(-15)+"</div>";
+		header_html+=att['title'].slice(0,15)+"</div>";
 	}
 	else{
 		header_html+="<div class='header' style='color:"+att_color+"'>";
@@ -209,11 +222,11 @@ var createAssignmentObj=function(att){
 //		header_html+="<i onclick='configureCB(\""+a.id+"\")' class='tooltip "+att_class3+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Configure</span></i>";
 //		header_html+="<i onclick='removeCB(\""+a.id+"\")' class='tooltip "+att_class4+"' style='font-size:40px;padding:0px 5px'><span class='tooltiptext'>Remove</span></i>";
 		header_html+="<br>";
-		header_html+=att['title'].slice(-15)+"</div>";
+		header_html+=att['title'].slice(0,15)+"</div>";
 	}
 
 	var body_html="<img src='"+bgname+"' style='width:200px;height:200px;'/>"
-	var footer_html="<div class='footer' style='color:"+att_color+"'>"+att['activity_name'].slice(-15)+"</div>";
+	var footer_html="<div class='footer' style='color:"+att_color+"'>"+att['activity_name'].slice(0,15)+"</div>";
 
 	var tableHTML="<table class='attachment_table' align='center'><tr><td>";
 	tableHTML+=header_html;
