@@ -118,13 +118,17 @@ def nrt_save(request):
 	#messages.add_message(request, messages.INFO, msg)
 
 	mylogger.debug(a)
+	pctreplace=''
+	try:pctreplace=a.data['pct_replace']
+	except:pass
 	context={
 		'title':'Now Read This',
 		'user':request.user,
 		'author':a.author_id,
 		'assignment':a,
-		'pctreplace':'15%',
+		'pctreplace':pctreplace,
 		'credits':a.credits,
+		'repeatable':a.repeatable,
 	}
 	return render(request,'nrt_editor.html',context)
 
@@ -142,13 +146,17 @@ def nrt_config(request):
 		mylogger.debug(assignment_id)
 		a=Assignment.objects.get(id=int(assignment_id))
 		mylogger.debug(a)
+		pctreplace=''
+		try:pctreplace=a.data['pct_replace']
+		except:pass
 		context={
 			'title':'Now Read This',
 			'user':request.user,
 			'author':a.author_id,
 			'assignment':a,
-			'pctreplace':'15%',
+			'pctreplace':pctreplace,
 			'credits':a.credits,
+			'repeatable':a.repeatable,
 		}
 		return render(request,'nrt_editor.html',context)
 

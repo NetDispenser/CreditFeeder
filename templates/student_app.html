@@ -17,7 +17,10 @@ $(document).ready(function(){
 	var assignments=JSON.parse(decode("{{str_assignments}}"));
 	for(var aidx=0;aidx<assignments.length;aidx++){
 //		add_assignment_to_student(assignments[aidx]);
-		var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title'],'id':assignments[aidx]['id'],'mode':2};
+		cover_img='';
+		try{cover_img=assignments[aidx]['cover_img'];}
+		catch(e){cover_img='/static/creditfeeder/images/jcdesign.jpg'}
+		var att={'activity_name':assignments[aidx]['activity_name'],'cover_img':cover_img,'title':assignments[aidx]['title'],'id':assignments[aidx]['id'],'mode':2};
 		var a=createAssignmentObj(att);
 		document.getElementById("student_attachments_bar").appendChild(a);
 	}

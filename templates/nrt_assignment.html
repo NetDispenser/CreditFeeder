@@ -22,14 +22,16 @@
 	div.popup{background:#dddddd;visibility:visible;}
 	div.popup:hover{}
 
-	div.choice{color:#000000;font-weight:bold;font-size:16px;}
-	div.choice:hover{color:orange;}
-
+	div.choice{color:#000000;font-weight:bold;font-size:24px;padding:2px 10px}
+	div.choice:hover{background-color: orange;}
+	#ppg_div{font-size:24px;}
+	#title_div{color:orange;}
+	#congrats_div{background-color:#050;color:gold;font-size:24px;padding:20px 20px;border-radius:5px;border:solid gold 4px;}
 	img.forcereader{width:400px;height:300px;}
 
-	a.anchor_choice{color:green;cursor:pointer;}
-	a.anchor_choice:link{color:green;cursor:pointer;}
-	a.anchor_choice:visited{color:green;}
+	a.anchor_choice{color:gold;cursor:pointer;}
+	a.anchor_choice:link{color:gold;cursor:pointer;}
+	a.anchor_choice:visited{color:gold;}
 	a.anchor_choice:hover{color:orange;}
 
 	div.caption{text-align:justify;width:600px;}
@@ -232,7 +234,11 @@ function render_1(){
 	img.src=url;
 	//img.className="forcereader";
 	img_div.appendChild(vspc);
-	img_div.appendChild(img);
+	var a=document.createElement("a");
+	a.target="_blank";
+	a.href=url;
+	a.appendChild(img);
+	img_div.appendChild(a);
 
 	img.onload=function(){
 		if(img.width<=W_IMG && img.height<=H_IMG){;}
@@ -284,7 +290,11 @@ function conclude(){
 	r=t.insertRow(-1);
 	c=r.insertCell(-1);
 	c.align="center";
-	c.appendChild(document.createTextNode("Good Work!"));
+	var congrats_div=document.createElement("div");
+	congrats_div.id="congrats_div";
+	congrats_div.innerHTML="Good Work!"
+	c.appendChild(congrats_div);
+	c.appendChild(document.createElement("br"));
 
 	r=t.insertRow(-1);
 	c=r.insertCell(-1);
@@ -292,7 +302,7 @@ function conclude(){
 	collectB=document.createElement("input");
 	collectB.type="submit";
 	collectB.value="Collect Credits";
-	collectB.className="entry";
+	collectB.className="pressbutton";
 	c.appendChild(collectB);
 
 	img_div.appendChild(t);
@@ -316,6 +326,7 @@ function check(){
 	return rval;
 }
 function take_page(){
+	print("take_page");
 
 	if(progress>1){
 
@@ -388,14 +399,14 @@ function take_page(){
 
 		ppg_div.innerHTML=html;
 
-		document.getElementById("footer").style.zIndex="0";
+//		document.getElementById("footer").style.zIndex="0";
 
 		progress+=1;
 
 	}
 }
 function nextCB(e){
-
+	print("nextCB");
 	take_page();
 
 }
@@ -407,28 +418,38 @@ $(document).ready(function(){
 
 	md=document.getElementById("mydiv");
 
+	var vspace=document.createElement("div");
+	vspace.style.height="50px";
+	md.appendChild(vspace)
+
+	title_div=document.createElement("div");
+	title_div.align="center";
+	title_div.innerHTML="<h1>{{assignment.title}}</h1>";
+	title_div.id="title_div";
+
 	img_div=document.createElement("div");
 	img_div.style.align="center";
-	img_div.innerHTML="<img src='{{cover_img_url}}' style='width:400px'/>"
+	img_div.innerHTML="<a target='_blank' href='{{cover_img_url}}'><img src='{{cover_img_url}}' style='width:400px'/></a>"
 	img_div.id="img_div";
 
 	cap_div=document.createElement("div");
-	cap_div.align="left";
-//	cap_div.style.width="400px";
+	cap_div.style.textAlign="center";
+	cap_div.style.padding="10px 10px";
+	cap_div.innerHTML="";
 	cap_div.id="cap_div";
-
 
 	ppg_div=document.createElement("div");
 //	ppg_div.align="justify";
 //	ppg_div.style.width="400px";
 	ppg_div.id="ppg_div";
 
+	md.appendChild(title_div);
 	md.appendChild(img_div);
 	md.appendChild(cap_div);
 	md.appendChild(ppg_div);
 
-	labels=[decode("{{assignment.title}}"),"Plugin: {{assignment.activity}}","{{assignment.date}}","Credits:{{assignment.credits}}","{{assignment.data.num_pages}} pgs"];
-	types=["h1","h2","h2","h2"];
+	labels=[decode("{{assignment.date}}","Credits:{{assignment.credits}}","{{assignment.data.num_pages}} pgs")];
+	types=["h2","h2","h2"];
 
 	t=document.createElement("table");
 //	t.style.width="400px";
@@ -454,7 +475,7 @@ $(document).ready(function(){
 //	b.style.width="80px";
 	b.value="Next";
 	b.id="nextB";
-	b.className="entry";
+	b.className="pressbutton";
 	b_listener(b,nextCB);
 	cc.appendChild(b);
 

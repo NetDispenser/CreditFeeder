@@ -48,8 +48,9 @@ $(document).ready(function(){
 
 	for(var aidx=0;aidx<assignments.length;aidx++){
 		cover_img='/static/creditfeeder/images/jcdesign.jpg';
-		try{cover_img=assignments[aidx].data['pages'][0]['img_url'];}
-		catch(e){print(e);}
+		print(assignments[aidx]);
+		try{cover_img=assignments[aidx]['cover_img'];}
+		catch(e){print("line52 "+e);}
 		var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title'],'cover_img':cover_img,'id':assignments[aidx]['id'],'mode':0};
 		var a=createAssignmentObj(att);
 		document.getElementById("attachments_bar").appendChild(a);
@@ -135,7 +136,7 @@ $(document).ready(function(){
 				for(var aidx=0;aidx<assignments.length;aidx++){
 					add_assignment_to_student(assignments[aidx]);
 					cover_img='/static/creditfeeder/images/jcdesign.jpg';
-					try{cover_img=assignments[aidx].data['pages'][0]['img_url'];}
+					try{cover_img=assignments[aidx]['cover_img'];}
 					catch(e){print(e);}
 								var att={'activity_name':assignments[aidx]['activity_name'],'cover_img':cover_img,'title':assignments[aidx]['title'],'id':assignments[aidx]['id'],'mode':1};
 					var a=createAssignmentObj(att);
@@ -255,7 +256,7 @@ var typeCB=function(e){
 }
 window.onresize=function(){
 	var status=window.innerWidth+" x "+window.innerHeight;
-	$("#debug").html(status);
+//	$("#debug").html(status);
 }
 var trackerCB=function(){
 	print("trackerCB 01");
