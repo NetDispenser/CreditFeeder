@@ -408,8 +408,8 @@ $(document).ready(function(){
 	md=document.getElementById("mydiv");
 
 	img_div=document.createElement("div");
-//	img_div.style.align="center";
-//	img_div.style.width="400px";
+	img_div.style.align="center";
+	img_div.innerHTML="<img src='{{cover_img_url}}' style='width:400px'/>"
 	img_div.id="img_div";
 
 	cap_div=document.createElement("div");
@@ -427,7 +427,7 @@ $(document).ready(function(){
 	md.appendChild(cap_div);
 	md.appendChild(ppg_div);
 
-	labels=[decode("{{assignment.title}}"),"Plugin: {{assignment.plugin}}","{{assignment.date}}","Credits:{{assignment.credits}}","{{assignment.data.num_pages}} pgs"];
+	labels=[decode("{{assignment.title}}"),"Plugin: {{assignment.activity}}","{{assignment.date}}","Credits:{{assignment.credits}}","{{assignment.data.num_pages}} pgs"];
 	types=["h1","h2","h2","h2"];
 
 	t=document.createElement("table");

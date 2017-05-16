@@ -140,7 +140,7 @@ def student_app(request,uname,pyld):
 	assignments=[]
 	for a_id in acct.userprofile.assignments:
 		a=Assignment.objects.get(id=a_id)
-		asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':uname,}
+		asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':uname,'cover_img':a.data['pages'][0]['img_url']}
 		assignments.append(asst)
 
 	context={
@@ -161,7 +161,7 @@ def parent_app(request,uname,pyld):
 	assignments=[]
 	for a_id in acct.userprofile.assignments:
 		a=Assignment.objects.get(id=a_id)
-		asst={'id':a_id,'title':a.title,'activity_name':a.activity}
+		asst={'id':a_id,'title':a.title,'activity_name':a.activity,'cover_img':a.data['pages'][0]['img_url']}
 		assignments.append(asst)
 
 	context={
@@ -187,7 +187,7 @@ def create(request):
 	a.save()
 	request.user.userprofile.assignments.append(a.id)#int
 	request.user.userprofile.save()
-	asst={'activity_name':a.activity,'title':a.title,'id':a.id,}
+	asst={'activity_name':a.activity,'title':a.title,'id':a.id,'cover_img':'/static/creditfeeder/images/jcdesign.jpg'}
 	return HttpResponse(json.dumps(asst))
 
 @login_required
@@ -202,7 +202,7 @@ def assign(request):
 	if acct.userprofile.assignments.count(int(assignment_id))==0:
 		acct.userprofile.assignments.append(int(assignment_id))
 		acct.userprofile.save()
-	asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':student_username,}
+	asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':student_username,'cover_img':a.data['pages'][0]['img_url']}
 	return HttpResponse(json.dumps(asst))
 
 @login_required
@@ -259,6 +259,6 @@ def load_student(request):
 	assignments=[]
 	for a_id in acct.userprofile.assignments:
 		a=Assignment.objects.get(id=a_id)
-		asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':student_username,}
+		asst={'complete':0,'activity_name':a.activity,'title':a.title,'id':a.id,'student_username':student_username,'cover_img':a.data['pages'][0]['img_url']}
 		assignments.append(asst)
 	return HttpResponse(json.dumps(assignments))

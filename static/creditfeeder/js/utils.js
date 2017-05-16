@@ -188,7 +188,7 @@ var createAssignmentObj=function(att){
 	a.className="attachment";
 	a.id=att['activity_name']+"_"+att['id'];
 	print("a.id="+a.id);
-
+	print(att);
 	var bgname,att_color,att_class;
 	var sherbert_colors=["#aaf2aa","#f48da8","#fcb96a",];
 
@@ -198,7 +198,7 @@ var createAssignmentObj=function(att){
 	var att_class4='fa fa-times-rectangle';
 
 	if(att['activity_name']=='ColorMyWorld'){bgname='/static/creditfeeder/images/colormyworld_tile.png';att_color='#8bc98b';}
-	else if(att['activity_name']=='NowReadThis'){bgname='/static/creditfeeder/images/jcdesign.jpg';att_color='#f48da8';}
+	else if(att['activity_name']=='NowReadThis'){bgname=att['cover_img'];att_color='#f48da8';}
 	else if(att['activity_name']=='TuxMathScrabble'){bgname='/static/creditfeeder/images/tuxmathscrabble_tile.png';att_color='#d49b57';}
 	else if(att['activity_name']=='Gears.activity'){bgname='/static/creditfeeder/images/gears_activity.png';att_color='#550000';}
 	else if(att['activity_name']=='Clock.activity'){bgname='/static/creditfeeder/images/clocks.png';att_color='#550055';}

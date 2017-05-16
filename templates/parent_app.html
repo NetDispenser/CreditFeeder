@@ -47,7 +47,10 @@ $(document).ready(function(){
 	}
 
 	for(var aidx=0;aidx<assignments.length;aidx++){
-		var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title'],'id':assignments[aidx]['id'],'mode':0};
+		cover_img='/static/creditfeeder/images/jcdesign.jpg';
+		try{cover_img=assignments[aidx].data['pages'][0]['img_url'];}
+		catch(e){print(e);}
+		var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title'],'cover_img':cover_img,'id':assignments[aidx]['id'],'mode':0};
 		var a=createAssignmentObj(att);
 		document.getElementById("attachments_bar").appendChild(a);
 		print(assignments[aidx])
@@ -63,7 +66,7 @@ $(document).ready(function(){
 			success: function(rval){
 				print("rval="+rval);
 				rval=JSON.parse(decode(rval));
-				var att={'activity_name':rval['activity_name'],'title':rval['title'],'id':rval['id'],'mode':0};
+				var att={'activity_name':rval['activity_name'],'title':rval['title'],'cover_img':rval['cover_img'],'id':rval['id'],'mode':0};
 				var a=createAssignmentObj(att);
 				document.getElementById("attachments_bar").appendChild(a);
 				add_assignment(rval)
@@ -81,7 +84,7 @@ $(document).ready(function(){
 			success: function(rval){
 				rval=JSON.parse(decode(rval));
 //				add_assignment_to_student(rval);
-				var att={'activity_name':rval['activity_name'],'title':rval['title'],'id':rval['id'],'mode':1};
+				var att={'activity_name':rval['activity_name'],'cover_img':rval['cover_img'],'title':rval['title'],'id':rval['id'],'mode':1};
 				var a=createAssignmentObj(att);
 				document.getElementById("student_attachments_bar").appendChild(a);
 			}//change "saveB" color
@@ -131,7 +134,10 @@ $(document).ready(function(){
 				var assignments=JSON.parse(decode(rval))
 				for(var aidx=0;aidx<assignments.length;aidx++){
 					add_assignment_to_student(assignments[aidx]);
-					var att={'activity_name':assignments[aidx]['activity_name'],'title':assignments[aidx]['title'],'id':assignments[aidx]['id'],'mode':1};
+					cover_img='/static/creditfeeder/images/jcdesign.jpg';
+					try{cover_img=assignments[aidx].data['pages'][0]['img_url'];}
+					catch(e){print(e);}
+								var att={'activity_name':assignments[aidx]['activity_name'],'cover_img':cover_img,'title':assignments[aidx]['title'],'id':assignments[aidx]['id'],'mode':1};
 					var a=createAssignmentObj(att);
 					document.getElementById("student_attachments_bar").appendChild(a);
 				}

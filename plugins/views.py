@@ -171,6 +171,7 @@ def nrt_test(request):
 		'user':request.user,
 		'assignment':a,
 		'am_teacher':request.user.userprofile.is_parent,
+		'cover_img_url':a.data['pages'][0]['img_url'],
 		#'menu':menu,
 		#'base_template':base_template,
 	}
