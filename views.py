@@ -119,7 +119,7 @@ def home(request):
 			mylogger.debug("logged-in user "+uname)
 			if acct.userprofile.is_parent==True:
 				return parent_app(request,uname,pyld)
-			
+
 			return student_app(request,uname,pyld)
 
 		except:
@@ -274,7 +274,11 @@ def delete(request):
 	str_pyld=request.POST["delete_pyld"]
 	json_pyld=json.loads(str_pyld)
 	assignment_id=json_pyld['assignment_id']
+
 	a=Assignment.objects.get(id=assignment_id)
+	if request.user.id != a.author_id:
+		return HttpResponse("You do not own that assignment")
+
 	a.delete()
 
 	print(request.user.userprofile.assignments)

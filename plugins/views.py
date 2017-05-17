@@ -30,6 +30,9 @@ def nrt_save(request):
 	num_pgs=int(pyld['num_pgs'])
 
 	a=Assignment.objects.get(id=assignment_id)
+	if request.user.id != a.author_id:
+		return render(request,'nrt_editor.html',{})
+
 	a.title=request.POST.get("title")
 	a.credits=pyld["credits"]
 	a.repeatable=pyld["repeatable"]
