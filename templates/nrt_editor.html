@@ -26,6 +26,7 @@ table.menubar{text-align:center;width:100%;background:#AAAAAA;color:#FFFFFF;}
 div.footer{text-align:center;width:100%;background:#AAAAAA;color:#FFFFFF;}
 div.login{width:600px;text-align:center;background:#AAAAAA;color:#FFFFFF;}
 
+td{text-align:center;}
 td.label{font-size:20px;color:#444444;font-weight:bold;}
 input.entry{font-size:20px;border:1px solid;bordercolor:#444444;}
 input.entryB{font-size:20px;border:1px solid;bordercolor:#444444;}
@@ -173,11 +174,15 @@ function saveCB(e){
 
 	pctreplace=get_selected("pct_select");
 	credits=get_selected("credits_select");
+
 	repeatable=get_selected("repeatable_select");
 	if(repeatable=="Repeatable")repeatable=1;
 	else repeatable=0;
 
-	pyld={"action":"save_assignment","page2delete":page2delete,"plugin":"NowReadThis","assignment_id":"{{assignment.id}}","num_pgs":window.num_pages,"credits":credits,"pctreplace":pctreplace,"repeatable":repeatable};
+	shared=get_selected("shared_select");
+	if(shared=="Shared")shared=1;
+	else shared=0;
+	pyld={"action":"save_assignment","page2delete":page2delete,"plugin":"NowReadThis","assignment_id":"{{assignment.id}}","num_pgs":window.num_pages,"credits":credits,"pctreplace":pctreplace,"repeatable":repeatable,"shared":shared};
 
 	document.getElementById("pyld").value=JSON.stringify(pyld);
 
@@ -470,13 +475,14 @@ $(document).ready(function(){
 
 
 	r=t.insertRow(-1);
-	cvals=["PctReplace","Credits","Repeatable","Save","NewPage"];
+	cvals=["PctReplace","Credits","Shared","Repeatable","Save","NewPage"];
 	for(var cidx=0;cidx<cvals.length;cidx++){
 		c=r.insertCell(-1);
 		c.align="center";
 		c.width="100px";
+		c.align="center";
 		jQuery('<div/>',{
-			html:"<th>"+cvals[cidx]+"</th>",
+			html:"<b>"+cvals[cidx]+"</b>",
 		}).appendTo(c);
 
 	}
@@ -491,6 +497,7 @@ $(document).ready(function(){
 	icon_opts=[
 		['5%','10%','15%','20%','25%','30%','40%','50%'],
 		['900','1800','2700','3600'],
+		["Shared","NotShared"],
 		["Repeatable","NotRepeatable"]
 	];
 	titles=["PctReplace","Credits","Repeatable"];
@@ -558,20 +565,20 @@ $(document).ready(function(){
 	credits_select_div.appendChild(credits_select);
 	c.appendChild(credits_select_div);
 
-////REPEATABLE
+////SHARED
 	c=r.insertCell(-1);
 	c.align="center";
-	repeatable="{{repeatable}}";
-	console.log("repeatable = "+repeatable);
-	var idx_repeatable=0;
-	if(repeatable=="False")idx_repeatable=1;
+	shared="{{shared}}";
+	console.log("shared = "+shared);
+	var idx_shared=0;
+	if(shared=="False")idx_shared=1;
 
-	repeatable_select=document.createElement("select");
-	repeatable_select.name="repeatable_select";
-	repeatable_select.id="repeatable_select";
-	repeatable_select.className="ui-btn ui-btn-inline ui-mini ui-corner-all";
-	repeatable_select.setAttribute("data-native-menu","false");
-	repeatable_select.setAttribute("data-mini","true");
+	shared_select=document.createElement("select");
+	shared_select.name="shared_select";
+	shared_select.id="shared_select";
+	shared_select.className="ui-btn ui-btn-inline ui-mini ui-corner-all";
+	shared_select.setAttribute("data-native-menu","false");
+	shared_select.setAttribute("data-mini","true");
 
 	as=icon_opts[2];
 
@@ -580,15 +587,47 @@ $(document).ready(function(){
 		opt.text=as[aidx];
 		opt.value=as[aidx];
 		opt.selected=0;
-		if(aidx==idx_repeatable)
+		if(aidx==idx_shared)
 			opt.selected=1;
 
-		repeatable_select.add(opt,repeatable_select.options[repeatable_select.options.length]);
+		shared_select.add(opt,shared_select.options[shared_select.options.length]);
 	}
-	repeatable_select_div=document.createElement("div");
-	repeatable_select_div.setAttribute("data-role","ui-contain");
-	repeatable_select_div.appendChild(repeatable_select);
-	c.appendChild(repeatable_select_div);
+	shared_select_div=document.createElement("div");
+	shared_select_div.setAttribute("data-role","ui-contain");
+	shared_select_div.appendChild(shared_select);
+	c.appendChild(shared_select_div);
+
+	////REPEATABLE
+		c=r.insertCell(-1);
+		c.align="center";
+		repeatable="{{repeatable}}";
+		console.log("repeatable = "+repeatable);
+		var idx_repeatable=0;
+		if(repeatable=="False")idx_repeatable=1;
+
+		repeatable_select=document.createElement("select");
+		repeatable_select.name="repeatable_select";
+		repeatable_select.id="repeatable_select";
+		repeatable_select.className="ui-btn ui-btn-inline ui-mini ui-corner-all";
+		repeatable_select.setAttribute("data-native-menu","false");
+		repeatable_select.setAttribute("data-mini","true");
+
+		as=icon_opts[3];
+
+		for(var aidx=0;aidx<as.length;aidx++){
+			opt=document.createElement("option");
+			opt.text=as[aidx];
+			opt.value=as[aidx];
+			opt.selected=0;
+			if(aidx==idx_repeatable)
+				opt.selected=1;
+
+			repeatable_select.add(opt,repeatable_select.options[repeatable_select.options.length]);
+		}
+		repeatable_select_div=document.createElement("div");
+		repeatable_select_div.setAttribute("data-role","ui-contain");
+		repeatable_select_div.appendChild(repeatable_select);
+		c.appendChild(repeatable_select_div);
 
 ////SAVE
 	saveB=document.createElement("input");

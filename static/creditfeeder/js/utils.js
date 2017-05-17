@@ -173,14 +173,15 @@ var configureCB=function(id){
 	print('configureCB: '+id);
 	var activity_name=id.split("_")[0];
 	print("configureCB: "+activity_name);
-
+	var html="<center><h1>Configuration: "+activity_name+"</h1><h3>(Currently only NowReadThis activity has connfiguration interface)</h3></center><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
 	if(activity_name=="NowReadThis"){
 		print("launching NRT");
 		var url = "/plugins/nrt/config?request=edit&id="+id;
+		html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
 	}
-	html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
 	$("#tracker").html(html);
 	$("#tracker").toggleClass('show');
+	$("#tracker").css('background-color','#555');
 }
 
 var createAssignmentObj=function(att){

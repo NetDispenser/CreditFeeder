@@ -25,7 +25,7 @@ SECRET_KEY = 'h1r_(!47k9(xbz2@ja2&cf1m_(5z1_2f9fbzsmlr)j0aclb)5n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.creditfeed.me','feeder.asymptopia.org',]
+ALLOWED_HOSTS = ['www.creditfeed.me','creditfeed.me','feeder.asymptopia.org',]
 
 
 # Application definition

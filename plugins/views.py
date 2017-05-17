@@ -33,7 +33,7 @@ def nrt_save(request):
 	a.title=request.POST.get("title")
 	a.credits=pyld["credits"]
 	a.repeatable=pyld["repeatable"]
-
+	a.shared=pyld["shared"]
 	a.save()
 
 	mylogger.debug("save before data")
@@ -129,6 +129,7 @@ def nrt_save(request):
 		'pctreplace':pctreplace,
 		'credits':a.credits,
 		'repeatable':a.repeatable,
+		'shared':a.shared,
 	}
 	return render(request,'nrt_editor.html',context)
 
@@ -157,6 +158,7 @@ def nrt_config(request):
 			'pctreplace':pctreplace,
 			'credits':a.credits,
 			'repeatable':a.repeatable,
+			'shared':a.shared,
 		}
 		return render(request,'nrt_editor.html',context)
 
@@ -174,12 +176,16 @@ def nrt_test(request):
 	mylogger.debug(assignment_id)
 	a=Assignment.objects.get(id=int(assignment_id))
 
+	cover_img='/static/creditfeeder/images/jcdesign.jpg'
+	try:cover_img=a.data['pages'][0]['img_url']
+	except:pass
+
 	context={
 		'title':'Assignment In Progress',
 		'user':request.user,
 		'assignment':a,
 		'am_teacher':request.user.userprofile.is_parent,
-		'cover_img_url':a.data['pages'][0]['img_url'],
+		'cover_img_url':cover_img,
 		#'menu':menu,
 		#'base_template':base_template,
 	}

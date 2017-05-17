@@ -66,6 +66,31 @@ def verify_accounts(ip):
 
 	return 0
 
+def backdoor(request):
+	if request.method == 'POST':
+		#mylogger.debug("getting login_pyld from post ...")
+		#mylogger.debug(request.POST["login_pyld"])
+		#pyld=json.loads(request.POST["login_pyld"])
+		#uname=pyld['username']
+		#passwd=pyld['password']
+		uname=request.POST.get("username")
+		passwd=request.POST.get("password")
+		acct=User.objects.get(username=uname)
+		mylogger.debug("got user")
+		user = authenticate(username=uname, password=passwd)
+		if not user:return HttpResponse("BACKDOOR LOGIN ERROR")
+		login(request,acct)
+		mylogger.debug("logged-in user "+uname)
+		"""
+		if acct.userprofile.is_parent==True:
+			return parent_app(request,uname,{})
+
+		return student_app(request,uname,{})
+		"""
+		return HttpResponseRedirect("/");
+
+	return render(request,'login.html',{})
+
 def home(request):
 	logging.debug("home");
 	if request.user.is_authenticated():
@@ -88,6 +113,8 @@ def home(request):
 			if pyld['account_type']=="parent":uname=pyld['device_ip']+"_PARENT"
 			acct=User.objects.get(username=uname)
 			mylogger.debug("got user")
+			user = authenticate(username=uname, password='pycon2017')
+			if not user:return HttpResponse('LOGIN ERROR')
 			login(request,acct)
 			mylogger.debug("logged-in user "+uname)
 
@@ -169,6 +196,16 @@ def parent_app(request,uname,pyld):
 		except:pass
 		asst={'id':a_id,'title':a.title,'activity_name':a.activity,'cover_img':cover_img}
 		assignments.append(asst)
+
+	for a in Assignment.objects.all():
+		if a.shared:
+			try:dummy=acct.userprofile.assignments.index(a.id)
+			except:
+				cover_img=''
+				try:cover_img=a.data['pages'][0]['img_url']
+				except:pass
+				asst={'id':a.id,'title':a.title,'activity_name':a.activity,'cover_img':cover_img}
+				assignments.append(asst)
 
 	context={
 		'title':'Parent@CreditFeeder',

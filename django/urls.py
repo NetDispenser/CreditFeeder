@@ -27,6 +27,7 @@ urlpatterns = [
     url(r'^assign$',creditfeeder_views.assign,name='assign'),
     url(r'^get$',creditfeeder_views.get,name='get'),
     url(r'^logout$',creditfeeder_views.logout_view,name='logout'),
+    url(r'^backdoor$',creditfeeder_views.backdoor,name='backdoor'),
     url(r'^feeder$',creditfeeder_views.home,name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^$',creditfeeder_views.home,name='home'),
