@@ -34,6 +34,7 @@ def nrt_save(request):
 	a.credits=pyld["credits"]
 	a.repeatable=pyld["repeatable"]
 	a.shared=pyld["shared"]
+	if a.shared:a.moderated=1;
 	a.save()
 
 	mylogger.debug("save before data")

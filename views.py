@@ -117,14 +117,14 @@ def home(request):
 			if not user:return HttpResponse('LOGIN ERROR')
 			login(request,acct)
 			mylogger.debug("logged-in user "+uname)
+			if acct.userprofile.is_parent==True:
+				return parent_app(request,uname,pyld)
+			
+			return student_app(request,uname,pyld)
 
 		except:
 			mylogger.exception("Should not be here now")
 
-		if acct.userprofile.is_parent==True:
-			return parent_app(request,uname,pyld)
-
-		return student_app(request,uname,pyld)
 
 	context={
 		'title':'Credit Feeder Login',
@@ -198,7 +198,7 @@ def parent_app(request,uname,pyld):
 		assignments.append(asst)
 
 	for a in Assignment.objects.all():
-		if a.shared:
+		if a.shared and a.moderated:
 			try:dummy=acct.userprofile.assignments.index(a.id)
 			except:
 				cover_img=''
