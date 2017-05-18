@@ -20,14 +20,14 @@ var IconButton=function(iconset,iCB,title,iID){
 
 	me.iconset=iconset;
 	me.iCB=iCB;
-	
+
 	me.selectCB=function(e){
 		me.idx_selected=me.opts.indexOf(e.target.innerHTML);
 		me.selected=me.opts[me.idx_selected];
 		me.div.title="selected: "+me.selected+" "+me.idx_selected.toString();
 		me.iopts.style.visibility="hidden";
 	}
-	
+
 	me.div=document.createElement("div");
 	me.div.className="ibutton";
 	me.div.style.width="32px";
@@ -36,24 +36,24 @@ var IconButton=function(iconset,iCB,title,iID){
 	else me.div.id=common_id();
 	me.div.style.zIndex="100";
 	me.div.title=title;
-	
-	icon_url="http://www.autoteach.net/static/icons/"+me.iconset[0];
+
+	icon_url="/static/creditfeeder/icons/"+me.iconset[0];
 	me.div.style.backgroundImage="url("+icon_url+")";
-	
+
 	me.hover_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[1];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[1];
 		me.div.style.backgroundImage="url("+icon_url+")";
 	}
 	me.unhover_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[0];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[0];
 		me.div.style.backgroundImage="url("+icon_url+")";
 	}
 	me.down_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[2];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[2];
 		me.div.style.backgroundImage="url("+icon_url+")";
 	}
 	me.up_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[0];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[0];
 		me.div.style.backgroundImage="url("+icon_url+")";
 	}
 	me.get=function(){
@@ -72,8 +72,7 @@ var IconButton=function(iconset,iCB,title,iID){
 		me.div.addEventListener("mousedown",me.down_iconCB,false);
 		me.div.addEventListener("mouseup",me.up_iconCB,false);
 		me.div.addEventListener("click",me.iCB,false);
-	}	
+	}
 
 	return me;
 }
-

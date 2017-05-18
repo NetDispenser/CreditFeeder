@@ -24,20 +24,20 @@ var IconSelect=function(iconset,opts,id,idx_selected,title){
 	me.selected=me.opts[me.idx_selected];
 	me.title=title;
 	me.cidlist=[];
-	
+
 	me.selectCB=function(e){
-		
+
 		var cid=e.target.id.split("_")[1];
 		var lb=document.getElementById("lb_"+cid);
-		
+
 		me.idx_selected=me.opts.indexOf(lb.innerHTML);
 		//should also equal cidlist.indexOf(cid)
-		
-		
+
+
 		me.selected=me.opts[me.idx_selected];
 		me.button.title=me.title+" = "+me.selected;
 		document.getElementById("iopts_"+me.title).style.visibility="hidden";
-		
+
 		for(var cidx=0;cidx<me.cidlist.length;cidx++){
 			rb_id="rb_"+me.cidlist[cidx];
 			rb=document.getElementById(rb_id);
@@ -52,9 +52,9 @@ var IconSelect=function(iconset,opts,id,idx_selected,title){
 				rb.checked=false;
 			}
 		}
-		
+
 	}
-	
+
 	me.button=document.createElement("div");
 	me.button.className="iselB";
 	me.button.style.width="32px";
@@ -64,38 +64,38 @@ var IconSelect=function(iconset,opts,id,idx_selected,title){
 	me.button.title=me.title+" = "+me.selected;
 	me.button.id=id;
 	me.button.value=me.opts[me.idx_selected];
-	
-	icon_url="http://www.autoteach.net/static/icons/"+iconset[0];
+
+	icon_url="/static/creditfeeder/icons/"+iconset[0];
 	me.button.style.backgroundImage="url("+icon_url+")";
-	
+
 	me.iopts=document.createElement("div");
 	me.iopts.className="isel_menu";
 	me.iopts.id="iopts_"+title;
 	me.button.appendChild(me.iopts);
-	
+
 	var t=document.createElement("table");
-	
+
 	for(var oidx=0;oidx<me.opts.length;oidx++){
-		
+
 		var r=t.insertRow(-1);
 		var c0=r.insertCell(-1);
 		var c1=r.insertCell(-1);
 		cid=common_id();
 		me.cidlist.push(cid);
-		
+
 		rb=document.createElement("input");
 		rb.type="radio";
 		rb.id="rb_"+cid;
-		
+
 		lb=document.createElement("div");
 		lb.className="isel_choice";
 		lb.innerHTML=me.opts[oidx];
 		lb.id="lb_"+cid;
-		
+
 		if(oidx==me.idx_selected){
 			rb.checked=true;
 			lb.className="isel_selected";
-		}			
+		}
 		if(navigator.appName=="Microsoft Internet Explorer"){
 			rb.attachEvent("onmousedown",me.selectCB);
 			lb.attachEvent("onmousedown",me.selectCB);
@@ -107,24 +107,24 @@ var IconSelect=function(iconset,opts,id,idx_selected,title){
 		c0.appendChild(rb);
 		c1.appendChild(lb);
 	}
-	
+
 
 	me.hover_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[1];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[1];
 		me.button.style.backgroundImage="url("+icon_url+")";
 	}
 	me.unhover_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[0];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[0];
 		me.button.style.backgroundImage="url("+icon_url+")";
 	}
 	me.down_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[1];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[1];
 		me.button.style.backgroundImage="url("+icon_url+")";
 		if(me.iopts.style.visibility=="visible"){me.hideCB();}
 		else{me.iopts.style.visibility="visible";}
 	}
 	me.up_iconCB=function(e){
-		icon_url="http://www.autoteach.net/static/icons/"+me.iconset[0];
+		icon_url="/static/creditfeeder/icons/"+me.iconset[0];
 		me.button.style.backgroundImage="url("+icon_url+")";
 	}
 	me.hideCB=function(e){
@@ -152,9 +152,8 @@ var IconSelect=function(iconset,opts,id,idx_selected,title){
 		me.button.addEventListener("mousedown",me.down_iconCB,false);
 		me.button.addEventListener("mouseup",me.up_iconCB,false);
 		me.iopts.addEventListener("click",me.hideCB,false);
-	}	
+	}
 
 	me.iopts.appendChild(t);
 	return me;
 }
-
