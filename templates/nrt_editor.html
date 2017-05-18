@@ -289,6 +289,9 @@ function pageCB(e,img_url,paragraph,caption){
 		ta.name=window.num_pages.toString()+"_paragraph";
 		ta.style.width="320px";
 		ta.style.height="100%";
+		ta.style.padding="10px 10px";
+		ta.style.border="1px solid #333";
+		ta.style.fontSize="16px";
 		bg_url="/static/creditfeeder/icons/PageText.png";
 		ta.style.background="transparent";
 		ta.style.backgroundImage="url("+bg_url+")";
@@ -297,7 +300,6 @@ function pageCB(e,img_url,paragraph,caption){
 		dummy.src="/static/creditfeeder/icons/PageText.png";
 		ta.style.height=parseInt(130+H_IMG)+"px";
 
-		ta.style.fontSize="14px";
 		ta.className="entry";
 		if(paragraph)ta.value=decode(paragraph);
 
@@ -399,6 +401,7 @@ function pageCB(e,img_url,paragraph,caption){
 		w.style.align="center";
 		w.id=window.num_pages.toString()+"_swatch";
 		w.name=window.num_pages.toString()+"_swatch";
+
 		cc.appendChild(w);
 
 		c.appendChild(tt);
@@ -415,7 +418,8 @@ function pageCB(e,img_url,paragraph,caption){
 		ta.style.width="95%";
 		ta.style.height="60px";
 		ta.style.background="transparent";
-		ta.style.fontSize="14px";
+		ta.style.fontSize="16px";
+		ta.style.border="1px solid #333";
 
 		if(caption)ta.value=decode(caption);
 		caption_cell.appendChild(ta);

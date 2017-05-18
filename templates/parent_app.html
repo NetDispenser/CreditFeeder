@@ -252,7 +252,6 @@ var logoutCB=function(){
 var typeCB=function(e){
 	print("typeCB: "+e);
 	$("#activity_dropdown").html(e);
-	$(".dropdown-content").click(function(){$(this).toggleClass('hide')});
 }
 window.onresize=function(){
 	var status=window.innerWidth+" x "+window.innerHeight;
