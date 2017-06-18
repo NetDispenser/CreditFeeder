@@ -55,6 +55,7 @@ def verify_accounts(ip):
 		acct.save()
 		mylogger.debug("verify_accounts created "+parent_uname)
 
+		media_path="/var/www/media/%d"%(acct.id)
 		if not os.path.exists(media_path):
 			mylogger.debug("creating %s"%(media_path))
 			os.mkdir(media_path)

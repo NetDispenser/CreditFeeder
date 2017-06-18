@@ -408,6 +408,11 @@ function take_page(){
 }
 function nextCB(e){
 	print("nextCB");
+//	$("#collectB").toggleClass('show');//short-circuit ultra-simple remote-notify test
+//	alert($("#collectB").html);
+
+//	parent.window.collectB.setAttribute("display","block");
+	parent.showCollectCB();
 	take_page();
 
 }

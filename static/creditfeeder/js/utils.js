@@ -161,10 +161,13 @@ var testCB=function(id){
 	else{
 		url="/static/sugarizer/activities/"+activity_name+"/index.html";
 	}
-	html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
+	html="<iframe src='"+url+"' style='width:100%;border:none;height:100%;'></iframe><button onmousedown='collectCB()' id='collectB' title='Collect Credits'>Collect</button><button onmousedown='trackerCB()' id='exitB' title='Exit Activity'>Exit</button>";
 	$("#tracker").html(html);
 	$("#tracker").toggleClass('show');
 
+	window.collectB=document.getElementById("collectB");//so can toggleClass(show) from within iframe
+	print("window.collectB=");
+	print(window.collectB);
 }
 
 

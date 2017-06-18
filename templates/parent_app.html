@@ -11,6 +11,7 @@
 <script src="/static/creditfeeder/js/jquery.min.js"></script>
 <script src="/static/creditfeeder/js/utils.js"></script>
 <script>
+window.collectB=null;
 $(document).ready(function(){
 
 	print("ready");
@@ -263,6 +264,18 @@ var trackerCB=function(){
 	print("trackerCB 02");
 //	window.open("/lanwatch");
 }
+var collectCB=function(){
+	print("collectCB 01");
+	$("#tracker").toggleClass('show');
+	print("EXPERIMENT SUCCESS!  We can call to anywhere!");//well this will ensure that we're talking to server.
+//	window.open("/lanwatch");
+}
+var showCollectCB=function(){
+	print("showCollectCB 01");
+	$("#collectB").toggleClass('show');
+	print("showCollectCB 02");
+}
+
 </script>
 </head>
 <body style="background-color:#39c968;">
