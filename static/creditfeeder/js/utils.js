@@ -150,6 +150,10 @@ var testCB=function(id){
 		print("launching CMW");
 		var url = "https://ccosse.github.io/colormyworld/";
 	}
+	else if(activity_name=="color-linez"){
+		print("launching color-linez");
+		var url = "https://netdispenser.github.io/color-linez/";
+	}
 	else if(activity_name=="NowReadThis"){
 		print("launching NRT");
 		var url = "/plugins/nrt/test?request=test&id="+id;
@@ -208,6 +212,7 @@ var createAssignmentObj=function(att){
 	else if(att['activity_name']=='Clock.activity'){bgname='/static/creditfeeder/images/clocks.png';att_color='#550055';}
 	else if(att['activity_name']=='PhysicsJS.activity'){bgname='/static/creditfeeder/images/physicsjs.png';att_color='#555500';}
 	else if(att['activity_name']=='Abecedarium.activity'){bgname='/static/creditfeeder/images/abecederium.png';att_color='#005500';}
+	else{bgname='/static/creditfeeder/images/jcdesign.jpg';att_color='#000055';}
 
 	var attrs=['activity_name','title'];
 	var scidx=parseInt(Math.random()*sherbert_colors.length);

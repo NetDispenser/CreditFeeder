@@ -169,6 +169,10 @@ var createCB=function(){
 	$('#create_pyld').val(JSON.stringify(pval));
 	$("#create_form").submit();
 }
+window.addEventListener("message", function(event) {
+    print("Hello from " + event.data);
+		$("#collectB").toggleClass('show');
+});
 var assignCB=function(id){
 	print('assignCB');
 	var a_id=id.split("_")[1];
@@ -304,6 +308,7 @@ var showCollectCB=function(){
 							<a href="#" onclick="typeCB('PhysicsJS.activity')" id="PhysicsJS.activity">PhysicsJS</a>
 							<a href="#" onclick="typeCB('Clock.activity')" id="Clock.activity">Clocks</a>
 							<a href="#" onclick="typeCB('Abecedarium.activity')" id="Abecedarium.activity">Abecedarium</a>
+							<a href="#" onclick="typeCB('color-linez')" id="color-linez">color-linez</a>
 					  </div>
 					</div>
 
