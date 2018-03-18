@@ -160,7 +160,7 @@ var testCB=function(id){
 	}
 	else if(activity_name=="TuxMathScrabble"){
 		print("launching TMS");
-		var url = "http://www.asymptopia.org/TuxMathScrabble-2015/";
+		var url = "http://ccosse.github.io/TuxMathScrabble-2015/";
 	}
 	else{
 		url="/static/sugarizer/activities/"+activity_name+"/index.html";

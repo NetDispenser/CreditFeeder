@@ -412,7 +412,8 @@ function nextCB(e){
 //	alert($("#collectB").html);
 
 //	parent.window.collectB.setAttribute("display","block");
-	parent.showCollectCB();
+	try{parent.showCollectCB();}
+	catch(err){}//undefined if student
 	take_page();
 
 }

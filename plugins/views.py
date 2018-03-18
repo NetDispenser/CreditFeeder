@@ -36,7 +36,7 @@ def nrt_save(request):
 	a.title=request.POST.get("title")
 	a.credits=pyld["credits"]
 	a.repeatable=pyld["repeatable"]
-	a.shared=pyld["shared"]
+	a.shared=False#pyld["shared"]
 	if a.shared:a.moderated=1;
 	a.save()
 

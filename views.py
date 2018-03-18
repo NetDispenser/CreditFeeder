@@ -93,7 +93,7 @@ def backdoor(request):
 	return render(request,'login.html',{})
 
 def home(request):
-	logging.debug("home");
+	logging.debug(dir(request));
 	if request.user.is_authenticated():
 		logging.debug("already authenticated:"+request.user.username)
 		if request.user.userprofile.is_parent==True:
@@ -110,11 +110,12 @@ def home(request):
 		acct=None
 		try:
 			rval=verify_accounts(pyld['device_ip'])
+			mylogger.debug("got rval")
 			uname=pyld['device_ip']+"_STUDENT"
 			if pyld['account_type']=="parent":uname=pyld['device_ip']+"_PARENT"
 			acct=User.objects.get(username=uname)
-			mylogger.debug("got user")
-			user = authenticate(username=uname, password='pycon2017')
+			mylogger.debug("got acct %s"%(uname))
+			user = authenticate(request, username=uname, password='pycon2017')
 			if not user:return HttpResponse('LOGIN ERROR')
 			login(request,acct)
 			mylogger.debug("logged-in user "+uname)
@@ -160,7 +161,7 @@ def get(request):
 	return HttpResponse('What Happened?');
 
 
-@login_required
+#@login_required
 def student_app(request,uname,pyld):
 	#The student interface at credit-feeder
 	acct=User.objects.get(username=uname)
@@ -183,7 +184,7 @@ def student_app(request,uname,pyld):
 	}
 	return render(request,'student_app.html',context)
 
-@login_required
+#@login_required
 def parent_app(request,uname,pyld):
 	#The parent interface at credit-feeder
 	acct=User.objects.get(username=uname)
